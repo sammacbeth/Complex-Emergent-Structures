@@ -18,7 +18,13 @@ public class StructuresEnvDataModel extends AEnvDataModel {
 	
 	// TODO map of participants
 	@ElementMap
-	public TreeMap<String, Participant> nodeModels = new TreeMap<String, Participant>();
+	public TreeMap<String, Participant> players = new TreeMap<String, Participant>();
+	
+	@ElementMap
+	public TreeMap<String, SeedPlayerModel> seedModels = new TreeMap<String, SeedPlayerModel>();
+	
+	@ElementMap
+	public TreeMap<String, CellPlayerModel> cellModels = new TreeMap<String, CellPlayerModel>();
 	
 	public StructuresEnvDataModel() {
 		super();

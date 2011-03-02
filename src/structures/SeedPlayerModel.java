@@ -8,7 +8,7 @@ import org.simpleframework.xml.Element;
 
 import presage.abstractparticipant.APlayerDataModel;
 
-public class SeedPlayerModel extends APlayerDataModel {
+public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange {
 
 	@Attribute
 	public String participantID;
@@ -43,6 +43,16 @@ public class SeedPlayerModel extends APlayerDataModel {
 	@Override
 	public void onInitialise() {
 		
+	}
+
+	@Override
+	public int getCommunicationRange() {
+		return this.communicationRange;
+	}
+
+	@Override
+	public Location getLocation() {
+		return position;
 	}
 
 }
