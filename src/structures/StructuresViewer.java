@@ -19,6 +19,8 @@ public class StructuresViewer extends JPanel implements Plugin {
 	
 	int cycle = 0;
 	
+	int agentSize = 10;
+	
 	public void paint(Graphics g) {
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -43,7 +45,7 @@ public class StructuresViewer extends JPanel implements Plugin {
 	
 	private void drawAgent(Graphics g, Location l, Color c) {
 		g.setColor(c);
-		g.fillOval(l.getX() - 1, l.getY() - 1, 2, 2);
+		g.fillOval(l.getX() - agentSize/2, l.getY() - agentSize/2, agentSize, agentSize);
 	}
 	
 	@Override

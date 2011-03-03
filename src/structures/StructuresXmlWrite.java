@@ -21,7 +21,7 @@ public class StructuresXmlWrite {
 	public static void main(String[] args) {
 		
 		int simSize = 500;
-		int communicationRange = 5;
+		int communicationRange = 20;
 
 		PresageConfig presageConfig = new PresageConfig();
 		

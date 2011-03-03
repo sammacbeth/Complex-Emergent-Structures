@@ -27,10 +27,9 @@ public abstract class APlayerDataModel implements PlayerDataModel, java.io.Seria
 	public ArrayList<String> roles;
 	
 	// so if we have twoclasses of player one honest the other dishonest we can sort the results
-	@Element
-	public String playerClass;
+	//@Element
+	//public String playerClass;
 
-	@Element
 	public String myrolesString;
 
 	@Element
@@ -63,7 +62,7 @@ public abstract class APlayerDataModel implements PlayerDataModel, java.io.Seria
 	public APlayerDataModel(String myId,  String myrolesString, String playerClass, long randomseed) {
 		super();
 		this.myId = myId;
-		this.playerClass = playerClass;
+		//this.playerClass = playerClass;
 		this.myrolesString = myrolesString;	
 		this.roles = StringParseTools.stringToArrayList(myrolesString);
 		this.randomseed = randomseed;
@@ -74,7 +73,7 @@ public abstract class APlayerDataModel implements PlayerDataModel, java.io.Seria
 		this.myId = myId;
 		this.myrolesString =  StringParseTools.arraylistToString(roles);
 		this.roles = roles;
-		this.playerClass = playerClass;
+		//this.playerClass = playerClass;
 		this.randomseed = randomseed;
 	}
 	
@@ -95,7 +94,7 @@ public abstract class APlayerDataModel implements PlayerDataModel, java.io.Seria
 	}
 
 	public String getPlayerClass() {
-		return playerClass;
+		return null;
 	}
 		
 	public void initialise(EnvironmentConnector environmentConnector){
@@ -104,7 +103,7 @@ public abstract class APlayerDataModel implements PlayerDataModel, java.io.Seria
 
 		// remove the first and last characters
 		// e.g. myRolesE = producer><consumer><bank><auctionhouse
-		roles = StringParseTools.stringToArrayList(myrolesString);
+		//roles = StringParseTools.stringToArrayList(myrolesString);
 
 		System.out.println(myId + ": my rolesString = " + myrolesString);
 

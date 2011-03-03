@@ -3,14 +3,21 @@ package structures;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.simpleframework.xml.Element;
+
 import presage.EnvironmentConnector;
 import presage.PlayerDataModel;
 import presage.abstractparticipant.APlayerDataModel;
 
 public class SeedAgent extends AbstractAgent {
 
+	@Element
 	protected SeedPlayerModel dm;
 
+	public SeedAgent() {
+		super();
+	}
+	
 	/**
 	 * 
 	 */

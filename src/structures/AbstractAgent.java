@@ -19,6 +19,10 @@ public abstract class AbstractAgent implements Participant {
 	 */
 	protected Interpreter interpreter;
 	
+	public AbstractAgent() {
+		super();
+	}
+	
 	@Override
 	public String getId() {
 		return getInternalDataModel().getId();
@@ -30,7 +34,7 @@ public abstract class AbstractAgent implements Participant {
 	}
 	
 	public abstract APlayerDataModel getPlayerDataModel();
-
+	
 	/**
 	 * Basic initialisation of the participant. Plans should be added to
 	 * the interpreter AFTER this has been called!
