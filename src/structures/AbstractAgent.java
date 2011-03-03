@@ -8,11 +8,12 @@ import presage.Participant;
 import presage.abstractparticipant.APlayerDataModel;
 import presage.abstractparticipant.Interpreter;
 import presage.environment.messages.ENVDeRegisterRequest;
+import presage.environment.messages.ENVRegistrationResponse;
 
 public abstract class AbstractAgent implements Participant {
 
 	protected boolean initialised = false;
-	
+
 	/**
 	 * Plan interpreter
 	 */
@@ -46,7 +47,7 @@ public abstract class AbstractAgent implements Participant {
 			initialised = true;
 			
 			// plans for all agents
-			
+			interpreter.addPlan(new NetworkConnectionsPlan(getPlayerDataModel(), interpreter, getId(), "network"));
 		}
 	}
 
@@ -77,6 +78,23 @@ public abstract class AbstractAgent implements Participant {
 	public void onSimulationComplete() {
 		// nothing at the moment
 		// TODO possible db dumps here
+	}
+	
+	@Override
+	public void onActivation() {
+		StructuresRegistrationRequest request;
+		ArrayList<String> roles = new ArrayList<String>();
+		if(getPlayerDataModel() instanceof CellPlayerModel) {
+			roles.add("cell");
+			request = new StructuresRegistrationRequest(getId(), roles, (CellPlayerModel) getPlayerDataModel());
+		} else if(getPlayerDataModel() instanceof SeedPlayerModel) {
+			roles.add("seed");
+			request = new StructuresRegistrationRequest(getId(), roles, (SeedPlayerModel) getPlayerDataModel());
+		} else {
+			return;
+		}
+		ENVRegistrationResponse response = getPlayerDataModel().myEnvironment.register(request);
+		getPlayerDataModel().environmentAuthCode = response.getAuthCode();
 	}
 
 }

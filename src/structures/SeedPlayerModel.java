@@ -1,6 +1,7 @@
 package structures;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.simpleframework.xml.Attribute;
@@ -8,7 +9,7 @@ import org.simpleframework.xml.Element;
 
 import presage.abstractparticipant.APlayerDataModel;
 
-public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange {
+public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections {
 
 	@Attribute
 	public String participantID;
@@ -23,6 +24,8 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	
 	@Attribute
 	public int communicationRange;
+	
+	public List<String> connections;
 	
 	public SeedPlayerModel() {
 		this.myId = participantID;
@@ -55,4 +58,14 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 		return position;
 	}
 
+	@Override
+	public void updateConnections(List<String> connections) {
+		this.connections = connections;
+	}
+
+	@Override
+	public List<String> getConnections() {
+		return this.connections;
+	}
+	
 }
