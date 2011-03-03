@@ -3,7 +3,7 @@
       <entry>
          <string>cell0</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell0" authcodestring="1272f20f-033a-437a-a170-13405fd47e78" communicationRange="20">
+            <dm participantID="cell0" authcodestring="cdf2019b-a547-4412-abb4-45ab9caead25" communicationRange="20" simSize="500">
                <myId>cell0</myId>
                <time>0</time>
                <roles>
@@ -17,7 +17,7 @@
       <entry>
          <string>cell1</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell1" authcodestring="553deed2-3d1a-403e-91c0-f2b7f29eee79" communicationRange="20">
+            <dm participantID="cell1" authcodestring="1bb76464-4831-4ef6-a398-67b10dede84b" communicationRange="20" simSize="500">
                <myId>cell1</myId>
                <time>0</time>
                <roles>
@@ -31,7 +31,7 @@
       <entry>
          <string>cell2</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell2" authcodestring="974e76cd-ea75-4576-85e9-91d38d5658dd" communicationRange="20">
+            <dm participantID="cell2" authcodestring="7dd29579-d3df-4d12-9366-50ad6c5f177f" communicationRange="20" simSize="500">
                <myId>cell2</myId>
                <time>0</time>
                <roles>
@@ -45,7 +45,7 @@
       <entry>
          <string>cell3</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell3" authcodestring="6574dd95-8c0c-4ec7-9796-fab373def71c" communicationRange="20">
+            <dm participantID="cell3" authcodestring="ab038470-2a9f-4b29-a632-4245a8f51a69" communicationRange="20" simSize="500">
                <myId>cell3</myId>
                <time>0</time>
                <roles>
@@ -59,7 +59,7 @@
       <entry>
          <string>seed0</string>
          <participant class="structures.SeedAgent">
-            <dm participantID="seed0" authcodestring="6364c07d-2c30-4372-9729-c42f2068d0a1" communicationRange="20">
+            <dm participantID="seed0" authcodestring="06bc249d-2eaa-4abd-a349-3d2703ef989e" communicationRange="20">
                <myId>seed0</myId>
                <time>0</time>
                <roles>
