@@ -1,9 +1,7 @@
 package structures;
 
-public interface HasCommunicationRange {
+public interface HasCommunicationRange extends HasLocation {
 
 	public int getCommunicationRange();
-	
-	public Location getLocation();
 	
 }

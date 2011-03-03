@@ -25,6 +25,9 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Attribute
 	public int communicationRange;
 	
+	@Attribute
+	public int simSize;
+	
 	public List<String> connections;
 	
 	public CellPlayerModel() {
@@ -32,7 +35,7 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	}
 	
 	public CellPlayerModel(ArrayList<String> roles, String participantID,
-			UUID authcode, Location position, int range) {
+			UUID authcode, Location position, int range, int simSize) {
 		super();
 		this.myId = participantID;
 		this.roles = roles;
@@ -41,6 +44,7 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 		this.authcodestring = authcode.toString();
 		this.position = position;
 		this.communicationRange = range;
+		this.simSize = simSize;
 	}
 	
 	@Override
@@ -66,6 +70,12 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Override
 	public List<String> getConnections() {
 		return this.connections;
+	}
+
+	@Override
+	public void setLocation(Location loc) {
+		this.position.setX(loc.getX());
+		this.position.setY(loc.getY());
 	}
 
 }

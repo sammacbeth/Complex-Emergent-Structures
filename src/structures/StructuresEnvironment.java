@@ -2,6 +2,8 @@ package structures;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import org.simpleframework.xml.Element;
 
@@ -71,6 +73,9 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			sim.players.get(player).enqueueInput(new ConnectionsInput(dmodel.getTime(), connected));
 			
 		}
+		for(String player : dmodel.cellModels.keySet()) {
+			sim.players.get(player).enqueueInput(new PositionInput(dmodel.cellModels.get(player).position, dmodel.getTime()));
+		}
 	}
 
 	@Override
@@ -97,11 +102,11 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		StructuresRegistrationRequest sro = (StructuresRegistrationRequest)registrationObject;
 		if(sro.dm instanceof CellPlayerModel) {
 			this.dmodel.cellModels.put(sro.getParticipantID(), (CellPlayerModel) sro.dm);
-			return new ENVRegistrationResponse(sro.getParticipantID(), this.dmodel.cellModels.get(sro.getParticipantID()).authcode) {
+			return new ENVRegistrationResponse(sro.getParticipantID(), UUID.randomUUID()) {
 			};
 		} else if(sro.dm instanceof SeedPlayerModel) {
 			this.dmodel.seedModels.put(sro.getParticipantID(), (SeedPlayerModel) sro.dm);
-			return new ENVRegistrationResponse(sro.getParticipantID(), this.dmodel.seedModels.get(sro.getParticipantID()).authcode) {
+			return new ENVRegistrationResponse(sro.getParticipantID(), UUID.randomUUID()) {
 			};
 		}
 		return null;

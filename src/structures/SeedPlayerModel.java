@@ -68,4 +68,10 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 		return this.connections;
 	}
 	
+	@Override
+	public void setLocation(Location loc) {
+		this.position.setX(loc.getX());
+		this.position.setY(loc.getY());
+	}
+	
 }

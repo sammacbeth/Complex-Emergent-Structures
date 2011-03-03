@@ -72,7 +72,7 @@ public class StructuresXmlWrite {
 
 		for(int i=0; i<cellcount; i++) {
 			Location l = new Location(rand.nextInt(simSize), rand.nextInt(simSize));
-			cells.put("cell"+i, new CellAgent(seedRoles, "cell"+i, UUID.randomUUID(), l, communicationRange));
+			cells.put("cell"+i, new CellAgent(seedRoles, "cell"+i, UUID.randomUUID(), l, communicationRange, simSize));
 			ms.addEvent(new ScriptedEvent ( 0 , UUID.randomUUID().toString(), new presage.events.CoreEvents.ActivateParticipant("cell"+i)));
 		}
 		parts.putAll(cells);
