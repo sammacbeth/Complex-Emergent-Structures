@@ -1,0 +1,74 @@
+<participantWrapper>
+   <treemap>
+      <entry>
+         <string>cell0</string>
+         <participant class="structures.CellAgent">
+            <dm participantID="cell0" authcodestring="1272f20f-033a-437a-a170-13405fd47e78" communicationRange="20">
+               <myId>cell0</myId>
+               <time>0</time>
+               <roles>
+                  <string>seed</string>
+               </roles>
+               <randomseed>0</randomseed>
+               <position x="474" y="424"/>
+            </dm>
+         </participant>
+      </entry>
+      <entry>
+         <string>cell1</string>
+         <participant class="structures.CellAgent">
+            <dm participantID="cell1" authcodestring="553deed2-3d1a-403e-91c0-f2b7f29eee79" communicationRange="20">
+               <myId>cell1</myId>
+               <time>0</time>
+               <roles>
+                  <string>seed</string>
+               </roles>
+               <randomseed>0</randomseed>
+               <position x="6" y="105"/>
+            </dm>
+         </participant>
+      </entry>
+      <entry>
+         <string>cell2</string>
+         <participant class="structures.CellAgent">
+            <dm participantID="cell2" authcodestring="974e76cd-ea75-4576-85e9-91d38d5658dd" communicationRange="20">
+               <myId>cell2</myId>
+               <time>0</time>
+               <roles>
+                  <string>seed</string>
+               </roles>
+               <randomseed>0</randomseed>
+               <position x="354" y="191"/>
+            </dm>
+         </participant>
+      </entry>
+      <entry>
+         <string>cell3</string>
+         <participant class="structures.CellAgent">
+            <dm participantID="cell3" authcodestring="6574dd95-8c0c-4ec7-9796-fab373def71c" communicationRange="20">
+               <myId>cell3</myId>
+               <time>0</time>
+               <roles>
+                  <string>seed</string>
+               </roles>
+               <randomseed>0</randomseed>
+               <position x="222" y="321"/>
+            </dm>
+         </participant>
+      </entry>
+      <entry>
+         <string>seed0</string>
+         <participant class="structures.SeedAgent">
+            <dm participantID="seed0" authcodestring="6364c07d-2c30-4372-9729-c42f2068d0a1" communicationRange="20">
+               <myId>seed0</myId>
+               <time>0</time>
+               <roles>
+                  <string>seed</string>
+               </roles>
+               <randomseed>0</randomseed>
+               <position x="487" y="92"/>
+            </dm>
+         </participant>
+      </entry>
+   </treemap>
+</participantWrapper>

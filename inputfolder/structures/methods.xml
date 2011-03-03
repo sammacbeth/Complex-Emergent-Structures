@@ -1,0 +1,41 @@
+<eventScriptManager>
+   <events>
+      <scriptedEvent>
+         <executiontime>0</executiontime>
+         <event class="presage.events.CoreEvents$ActivateParticipant">
+            <participantname>seed0</participantname>
+         </event>
+         <uuidstring>df3621ab-b0bc-4c0f-8578-6a03a67a6d10</uuidstring>
+      </scriptedEvent>
+      <scriptedEvent>
+         <executiontime>0</executiontime>
+         <event class="presage.events.CoreEvents$ActivateParticipant">
+            <participantname>cell0</participantname>
+         </event>
+         <uuidstring>67868838-01fb-46d5-936d-96b5280541ea</uuidstring>
+      </scriptedEvent>
+      <scriptedEvent>
+         <executiontime>0</executiontime>
+         <event class="presage.events.CoreEvents$ActivateParticipant">
+            <participantname>cell1</participantname>
+         </event>
+         <uuidstring>431f5b78-f314-4a47-97ff-36b5742241d8</uuidstring>
+      </scriptedEvent>
+      <scriptedEvent>
+         <executiontime>0</executiontime>
+         <event class="presage.events.CoreEvents$ActivateParticipant">
+            <participantname>cell2</participantname>
+         </event>
+         <uuidstring>987717b4-dee9-4791-bd5d-13c96171c66b</uuidstring>
+      </scriptedEvent>
+      <scriptedEvent>
+         <executiontime>0</executiontime>
+         <event class="presage.events.CoreEvents$ActivateParticipant">
+            <participantname>cell3</participantname>
+         </event>
+         <uuidstring>6786be2c-7c79-48ab-9428-ca45128888fb</uuidstring>
+      </scriptedEvent>
+   </events>
+   <preevents/>
+   <postevents/>
+</eventScriptManager>

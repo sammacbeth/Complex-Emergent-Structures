@@ -1,0 +1,14 @@
+<structuresEnvironment>
+   <queueactions>false</queueactions>
+   <randomseed>4567</randomseed>
+   <dmodel>
+      <environmentname>EnvDataModel</environmentname>
+      <envClass>structures.StructuresEnvDataModel</envClass>
+      <time>0</time>
+      <width>500</width>
+      <height>500</height>
+      <players/>
+      <seedModels/>
+      <cellModels/>
+   </dmodel>
+</structuresEnvironment>

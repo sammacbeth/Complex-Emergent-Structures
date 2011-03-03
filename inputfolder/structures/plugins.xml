@@ -1,0 +1,5 @@
+<pluginManager>
+   <plugins class="java.util.ArrayList">
+      <plugin class="structures.StructuresViewer"/>
+   </plugins>
+</pluginManager>
