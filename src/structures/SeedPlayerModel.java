@@ -1,7 +1,9 @@
 package structures;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.simpleframework.xml.Attribute;
@@ -11,6 +13,11 @@ import presage.abstractparticipant.APlayerDataModel;
 
 public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections {
 
+	// every seed has a list of tokens
+	public ArrayList<String> tokenList = new ArrayList<String>();
+	
+	public Map<String, Integer> lastRequest = new HashMap<String, Integer>();
+	
 	@Attribute
 	public String participantID;
 	

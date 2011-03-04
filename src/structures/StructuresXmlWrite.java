@@ -52,7 +52,7 @@ public class StructuresXmlWrite {
 		TreeMap<String, Participant> parts = new TreeMap<String, Participant>();
 		
 		// seeds
-		int seedcount = 1;
+		int seedcount = 6;
 		ArrayList<String> seedRoles = new ArrayList<String>();
 		seedRoles.add("seed");
 		TreeMap<String, SeedAgent> seeds = new TreeMap<String, SeedAgent>();

@@ -11,6 +11,9 @@ import presage.abstractparticipant.APlayerDataModel;
 
 public class CellPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections {
 
+	// every cell has a list of tokens
+	public ArrayList<String> tokenList = new ArrayList<String>();
+	
 	@Attribute
 	public String participantID;
 	
