@@ -11,7 +11,7 @@ import org.simpleframework.xml.Element;
 
 import presage.abstractparticipant.APlayerDataModel;
 
-public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections {
+public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections, HasTokens {
 
 	// every seed has a list of tokens
 	public ArrayList<String> tokenList = new ArrayList<String>();
@@ -79,6 +79,11 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	public void setLocation(Location loc) {
 		this.position.setX(loc.getX());
 		this.position.setY(loc.getY());
+	}
+
+	@Override
+	public List<String> getTokens() {
+		return tokenList;
 	}
 	
 }

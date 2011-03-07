@@ -9,7 +9,7 @@ import org.simpleframework.xml.Element;
 
 import presage.abstractparticipant.APlayerDataModel;
 
-public class CellPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections {
+public class CellPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections, HasTokens {
 
 	// every cell has a list of tokens
 	public ArrayList<String> tokenList = new ArrayList<String>();
@@ -79,6 +79,11 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	public void setLocation(Location loc) {
 		this.position.setX(loc.getX());
 		this.position.setY(loc.getY());
+	}
+
+	@Override
+	public List<String> getTokens() {
+		return tokenList;
 	}
 
 }

@@ -34,6 +34,7 @@ public class CellAgent extends AbstractAgent {
 	@Override
 	public void initialise(EnvironmentConnector environmentConnector) {
 		super.initialise(environmentConnector);
+		interpreter.addPlan(new AnswerRequestPlan(getPlayerDataModel(), interpreter, getId(), "requesttoken"));
 	}
 
 	@Override

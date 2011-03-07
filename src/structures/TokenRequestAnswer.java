@@ -5,16 +5,21 @@ import java.util.List;
 
 import presage.Message;
 
-public class TokenRequestAnswer extends Message {
+public class TokenRequestAnswer extends Message implements HasTokens {
 
-	public List<String> TokenList = new ArrayList<String>();
+	public List<String> TokenList;
 	
 	public TokenRequestAnswer(String to, String from, String toKey,
-			String fromKey, String performative, String convType, long timestamp, ArrayList<String> TokenList) {
-		super(to, from, toKey, fromKey, performative, convType, timestamp);
+			String fromKey, long timestamp, List<String> TokenList) {
+		super(to, from, toKey, fromKey, "reply", "tokenrequest", timestamp);
 		// TODO Auto-generated constructor stub
 		this.TokenList = TokenList;
 		
+	}
+
+	@Override
+	public List<String> getTokens() {
+		return TokenList;
 	}
 
 }

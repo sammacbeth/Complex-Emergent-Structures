@@ -34,6 +34,7 @@ public class SeedAgent extends AbstractAgent {
 	public void initialise(EnvironmentConnector environmentConnector) {
 		super.initialise(environmentConnector);
 		// any other initialisation you want to do.
+		interpreter.addPlan(new AnswerRequestPlan(getPlayerDataModel(), interpreter, getId(), "requesttoken"));
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public class SeedAgent extends AbstractAgent {
 		// every seed will check if there is a cell within a range of 10
 		
 		checkSeedNeighbourhood();	
-		attachCellToSeed(i,y);
+		//attachCellToSeed(i,y);
 		
 		
 	}
@@ -58,13 +59,6 @@ public class SeedAgent extends AbstractAgent {
 		// call transferToken(i,y)
 		
 	}
-
-	private void transferToken(int i, int y) {
-		// copy i to y
-		tokenList(y) = tokenList(i); 
-	}
-
-	
 	
 	private void checkSeedNeighbourhood() {
 		// check if there is any cell in the neighbourhood of seed i

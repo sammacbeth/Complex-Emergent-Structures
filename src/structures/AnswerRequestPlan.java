@@ -5,35 +5,50 @@ import presage.abstractparticipant.APlayerDataModel;
 import presage.abstractparticipant.Interpreter;
 import presage.abstractparticipant.plan.Plan;
 
+/**
+ * Processes both {@link TokenRequestMessage}s and {@link TokenRequestAnswer}s.
+ * @author Sam Macbeth
+ *
+ */
 public class AnswerRequestPlan extends Plan {
 
+	HasTokens tokens;
+	
 	public AnswerRequestPlan(APlayerDataModel dm, Interpreter interpreter,
 			String myKey, String type) {
 		super(dm, interpreter, myKey, type);
-		// TODO Auto-generated constructor stub
+		tokens = (HasTokens) dm;
 	}
 
 	@Override
 	public boolean canHandle(Input input) {
-		// checks if input is of the type TokenRequestMessage
-		return input instanceof TokenRequestMessage;
+		// checks if input is of the type TokenRequestMessage or TokenRequestAnswer
+		return (input instanceof TokenRequestMessage || input instanceof TokenRequestAnswer);
 	}
 
 	@Override
 	public void handle(Input input) {
-		// TODO Auto-generated method stub
+		if(input instanceof TokenRequestMessage) {
+			// reply with our tokens.
+			dm.myEnvironment.act(new TokenRequestAnswer(((TokenRequestMessage) input).getFrom(), dm.getId(), null, dm.keyGen.getKey(), dm.getTime(), tokens.getTokens()), dm.myId, dm.environmentAuthCode);
+		}
+		else if (input instanceof TokenRequestAnswer) {
+			// compare to existing token(s)
+			if(!tokens.getTokens().containsAll(((TokenRequestAnswer) input).getTokens())) {
+				// TODO establish a connection with cell/seed
+			}
 
+		}
 	}
 
 	@Override
 	public boolean inhibits(Plan ihandler) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean canRemove() {
-		// TODO Auto-generated method stub
+
 		return false;
 	}
 
