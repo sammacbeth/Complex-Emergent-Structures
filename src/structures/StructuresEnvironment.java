@@ -59,6 +59,23 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	protected void updatePhysicalWorld() {
 		alreadyMoved = new ArrayList<String>();
 		
+		for(Follow f : follows) {
+			Location fLoc = dmodel.cellModels.get(f.getParticipantId()).getLocation(); // follow is always a cell
+			Location targetLoc = ((HasCommunicationRange) dmodel.players.get(f.getTarget())).getLocation();
+			// if locations are equal move f out of the way randomly
+			if(fLoc.equals(targetLoc)) {
+				fLoc = Location.add(fLoc, new Location(random.nextInt(10)-10, random.nextInt(10)-10));
+			} else {
+				double angle = Location.minus(targetLoc, fLoc).getAngle();
+				Location offset = Location.fromPolar(-15, angle);
+				Location t = Location.add(targetLoc, offset);
+				Move m = Move.generateMove(f.getParticipantId(), fLoc, t, 5);
+				if(m != null) {
+					logger.debug("Calculating follow move: "+f.getParticipantId()+"->"+f.getTarget()+" ang="+ angle +" offset="+offset+" targetloc="+t+" move="+m);
+					act(m, f.getParticipantId(), dmodel.cellModels.get(f.getParticipantId()).environmentAuthCode);
+				}					
+			}
+		}
 		follows = new LinkedList<Follow>();
 	}
 
@@ -147,6 +164,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		// TODO add handlers
 		this.actionhandlers.add(new MoveHandler());
 		this.actionhandlers.add(new MessageHandler());
+		this.actionhandlers.add(new FollowHandler());
 		
 		alreadyMoved = new ArrayList<String>();
 	}
@@ -197,10 +215,10 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			alreadyMoved.add(actorID);
 			
 			// do slaves
-			for(String slave : dmodel.cellModels.get(actorID).getSlaves()) {
+			/*for(String slave : dmodel.cellModels.get(actorID).getSlaves()) {
 				handle(action, slave);
-				sim.players.get(slave).enqueueInput(new PositionInput(newPos, dmodel.getTime()));
-			}
+				//sim.players.get(slave).enqueueInput(new PositionInput(newPos, dmodel.getTime()));
+			}*/
 			
 			return null;
 		}

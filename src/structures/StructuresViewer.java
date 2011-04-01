@@ -34,18 +34,19 @@ public class StructuresViewer extends JPanel implements Plugin {
 		// seeds
 		for(String playerID : dmodel.seedModels.keySet()) {
 			SeedPlayerModel player = dmodel.seedModels.get((String) playerID);
-			drawAgent(g, player.getLocation(), seedColor);
+			drawAgent(g, player.getLocation(), seedColor, "");
 		}
 		// cells
 		for(String playerID : dmodel.cellModels.keySet()) {
 			CellPlayerModel player = dmodel.cellModels.get((String) playerID);
-			drawAgent(g, player.getLocation(), cellColor);
+			drawAgent(g, player.getLocation(), cellColor, player.getId());
 		}
 	}
 	
-	private void drawAgent(Graphics g, Location l, Color c) {
+	private void drawAgent(Graphics g, Location l, Color c, String name) {
 		g.setColor(c);
 		g.fillOval(l.getX() - agentSize/2, l.getY() - agentSize/2, agentSize, agentSize);
+		g.drawString(name, (l.getX() - 1), (l.getY() - 1));
 	}
 	
 	@Override
