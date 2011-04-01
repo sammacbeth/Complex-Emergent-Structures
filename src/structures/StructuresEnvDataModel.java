@@ -6,6 +6,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementMap;
 
 import presage.Participant;
+import presage.abstractparticipant.APlayerDataModel;
 import presage.environment.AEnvDataModel;
 
 public class StructuresEnvDataModel extends AEnvDataModel {
@@ -18,7 +19,7 @@ public class StructuresEnvDataModel extends AEnvDataModel {
 	
 	// TODO map of participants
 	@ElementMap
-	public TreeMap<String, Participant> players = new TreeMap<String, Participant>();
+	public TreeMap<String, APlayerDataModel> players = new TreeMap<String, APlayerDataModel>();
 	
 	@ElementMap
 	public TreeMap<String, SeedPlayerModel> seedModels = new TreeMap<String, SeedPlayerModel>();

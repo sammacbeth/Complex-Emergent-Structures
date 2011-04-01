@@ -2,18 +2,21 @@ package structures;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.simpleframework.xml.Attribute;
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 
 import presage.abstractparticipant.APlayerDataModel;
 
-public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections, HasTokens {
+public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections, HasTokens, Connectable {
 
 	// every seed has a list of tokens
+	@ElementList
 	public ArrayList<String> tokenList = new ArrayList<String>();
 	
 	public Map<String, Integer> lastRequest = new HashMap<String, Integer>();
@@ -32,14 +35,18 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Attribute
 	public int communicationRange;
 	
-	public List<String> connections;
+	public List<String> connections = new LinkedList<String>();
+	
+	public final List<String> slaves = new ArrayList<String>();
+	
+	public final Map<String, Integer[]> connectionAttempts = new HashMap<String, Integer[]>();
 	
 	public SeedPlayerModel() {
 		this.myId = participantID;
 	}
 	
 	public SeedPlayerModel(ArrayList<String> roles, String participantID,
-			UUID authcode, Location position, int range) {
+			UUID authcode, Location position, int range, ArrayList<String> tokenlist) {
 		super();
 		this.myId = participantID;
 		this.roles = roles;
@@ -48,6 +55,7 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 		this.authcodestring = authcode.toString();
 		this.position = position;
 		this.communicationRange = range;
+		this.tokenList = tokenlist;
 	}
 	
 	@Override
@@ -84,6 +92,26 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Override
 	public List<String> getTokens() {
 		return tokenList;
+	}
+
+	@Override
+	public String getMaster() {
+		return null;
+	}
+
+	@Override
+	public List<String> getSlaves() {
+		return this.slaves;
+	}
+
+	@Override
+	public Map<String, Integer[]> getConnectionAttempts() {
+		return this.connectionAttempts;
+	}
+	
+	@Override
+	public void setMaster(String master) {
+		System.err.println("Seed player assigned master!!");
 	}
 	
 }

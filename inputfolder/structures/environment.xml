@@ -5,8 +5,8 @@
       <environmentname>EnvDataModel</environmentname>
       <envClass>structures.StructuresEnvDataModel</envClass>
       <time>0</time>
-      <width>500</width>
-      <height>500</height>
+      <width>200</width>
+      <height>200</height>
       <players/>
       <seedModels/>
       <cellModels/>

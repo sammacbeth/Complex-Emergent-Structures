@@ -2,6 +2,7 @@ package structures;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class StructuresXmlWrite {
 	 */
 	public static void main(String[] args) {
 		
-		int simSize = 500;
+		int simSize = 200;
 		int communicationRange = 20;
 
 		PresageConfig presageConfig = new PresageConfig();
@@ -52,14 +53,22 @@ public class StructuresXmlWrite {
 		TreeMap<String, Participant> parts = new TreeMap<String, Participant>();
 		
 		// seeds
-		int seedcount = 6;
+		int seedcount = 2;
 		ArrayList<String> seedRoles = new ArrayList<String>();
 		seedRoles.add("seed");
 		TreeMap<String, SeedAgent> seeds = new TreeMap<String, SeedAgent>();
-
+		
+		ArrayList<String>[] seedTokens = new ArrayList[seedcount];
+		for(int ind=0; ind<seedcount; ind++) {
+			seedTokens[ind] = new ArrayList<String>();
+		}
+		seedTokens[0].add("a");
+		seedTokens[1].add("a");
+		seedTokens[1].add("b");
+		
 		for(int i=0; i<seedcount; i++) {
 			Location l = new Location(rand.nextInt(simSize), rand.nextInt(simSize));
-			seeds.put("seed"+i, new SeedAgent(seedRoles, "seed"+i, UUID.randomUUID(), l, communicationRange));
+			seeds.put("seed"+i, new SeedAgent(seedRoles, "seed"+i, UUID.randomUUID(), l, communicationRange, seedTokens[i]));
 			ms.addEvent(new ScriptedEvent ( 0 , UUID.randomUUID().toString(), new presage.events.CoreEvents.ActivateParticipant("seed"+i)));
 		}
 		parts.putAll(seeds);
@@ -70,9 +79,16 @@ public class StructuresXmlWrite {
 		cellRoles.add("cell");
 		TreeMap<String, CellAgent> cells = new TreeMap<String, CellAgent>();
 
+		ArrayList<String>[] cellTokens = new ArrayList[cellcount];
+		for(int ind=0; ind<cellcount; ind++) {
+			cellTokens[ind] = new ArrayList<String>();
+		}
+		cellTokens[0].add("a");
+		cellTokens[1].add("b");
+		
 		for(int i=0; i<cellcount; i++) {
 			Location l = new Location(rand.nextInt(simSize), rand.nextInt(simSize));
-			cells.put("cell"+i, new CellAgent(seedRoles, "cell"+i, UUID.randomUUID(), l, communicationRange, simSize));
+			cells.put("cell"+i, new CellAgent(seedRoles, "cell"+i, UUID.randomUUID(), l, communicationRange, simSize, cellTokens[i]));
 			ms.addEvent(new ScriptedEvent ( 0 , UUID.randomUUID().toString(), new presage.events.CoreEvents.ActivateParticipant("cell"+i)));
 		}
 		parts.putAll(cells);

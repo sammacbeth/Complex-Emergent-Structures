@@ -1,10 +1,14 @@
 package structures;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
+import org.apache.log4j.Logger;
 import org.simpleframework.xml.Element;
 
 import presage.Action;
@@ -19,10 +23,14 @@ import presage.environment.messages.ENVRegistrationResponse;
 
 public class StructuresEnvironment extends AbstractEnvironment {
 
+	private final Logger logger = Logger.getLogger(StructuresEnvironment.class);
+	
 	@Element
 	StructuresEnvDataModel dmodel;
 	
 	ArrayList<String> alreadyMoved = new ArrayList<String>();
+	
+	LinkedList<Follow> follows = new LinkedList<Follow>();
 	
 	Simulation sim;
 	
@@ -50,11 +58,15 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	@Override
 	protected void updatePhysicalWorld() {
 		alreadyMoved = new ArrayList<String>();
+		
+		follows = new LinkedList<Follow>();
 	}
 
 	@Override
 	protected void updatePerceptions() {
-		for(String player : dmodel.players.keySet()) {
+		Set<String> players = new HashSet<String>(dmodel.cellModels.keySet());
+		players.addAll(dmodel.seedModels.keySet());
+		for(String player : players) {
 			
 			List<String> connected = new ArrayList<String>();
 			
@@ -71,7 +83,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 				}
 			}
 			sim.players.get(player).enqueueInput(new ConnectionsInput(dmodel.getTime(), connected));
-			
+			//logger.debug("Sending "+ connected.size() +" connections to "+player);
 		}
 		for(String player : dmodel.cellModels.keySet()) {
 			sim.players.get(player).enqueueInput(new PositionInput(dmodel.cellModels.get(player).position, dmodel.getTime()));
@@ -85,13 +97,13 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	
 	private boolean physicallyConnected(String agent1, String agent2) {
 		// distance between agents less than the smallest wireless range for an agent.
-		return (distanceBetween(agent1, agent2) <= Math.min(((HasCommunicationRange) dmodel.players.get(agent1).getInternalDataModel()).getCommunicationRange(), ((HasCommunicationRange) dmodel.players.get(agent2).getInternalDataModel()).getCommunicationRange()));
+		return (distanceBetween(agent1, agent2) <= Math.min(((HasCommunicationRange) dmodel.players.get(agent1)).getCommunicationRange(), ((HasCommunicationRange) dmodel.players.get(agent2)).getCommunicationRange()));
 	}
 	
 	private int distanceBetween(String agent1, String agent2) {
 		// get the player models for each agent
-		HasCommunicationRange a1 = (HasCommunicationRange) dmodel.players.get(agent1).getInternalDataModel();
-		HasCommunicationRange a2 = (HasCommunicationRange) dmodel.players.get(agent2).getInternalDataModel();
+		HasCommunicationRange a1 = (HasCommunicationRange) dmodel.players.get(agent1);
+		HasCommunicationRange a2 = (HasCommunicationRange) dmodel.players.get(agent2);
 		// calculate the straight line distance between each agent's coordinates.
 		return Location.distanceBetween(a1.getLocation(), a2.getLocation());
 	}
@@ -102,10 +114,12 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		StructuresRegistrationRequest sro = (StructuresRegistrationRequest)registrationObject;
 		if(sro.dm instanceof CellPlayerModel) {
 			this.dmodel.cellModels.put(sro.getParticipantID(), (CellPlayerModel) sro.dm);
+			this.dmodel.players.put(sro.getParticipantID(), sro.dm);
 			return new ENVRegistrationResponse(sro.getParticipantID(), UUID.randomUUID()) {
 			};
 		} else if(sro.dm instanceof SeedPlayerModel) {
 			this.dmodel.seedModels.put(sro.getParticipantID(), (SeedPlayerModel) sro.dm);
+			this.dmodel.players.put(sro.getParticipantID(), sro.dm);
 			return new ENVRegistrationResponse(sro.getParticipantID(), UUID.randomUUID()) {
 			};
 		}
@@ -182,6 +196,12 @@ public class StructuresEnvironment extends AbstractEnvironment {
 
 			alreadyMoved.add(actorID);
 			
+			// do slaves
+			for(String slave : dmodel.cellModels.get(actorID).getSlaves()) {
+				handle(action, slave);
+				sim.players.get(slave).enqueueInput(new PositionInput(newPos, dmodel.getTime()));
+			}
+			
 			return null;
 		}
 	}
@@ -218,6 +238,24 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			return null;
 
 		}
+	}
+	
+	public class FollowHandler implements ActionHandler {
+
+		@Override
+		public boolean canHandle(Action action) {
+			return action instanceof Follow;
+		}
+
+		@Override
+		public Input handle(Action action, String actorID) {
+			Follow f = (Follow) action;
+			if(actorID == f.participantId) {
+				follows.add(f);
+			}
+			return null;
+		}
+		
 	}
 
 }

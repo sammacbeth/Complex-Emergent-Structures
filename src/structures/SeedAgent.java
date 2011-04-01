@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.simpleframework.xml.Element;
-import org.totalbeginner.tutorial.Book;
 
 import presage.EnvironmentConnector;
 import presage.PlayerDataModel;
@@ -14,9 +13,6 @@ public class SeedAgent extends AbstractAgent {
 
 	@Element
 	protected SeedPlayerModel dm;
-
-	ArrayList<Token> tokens;
-	
 	
 	public SeedAgent() {
 		super();
@@ -25,9 +21,9 @@ public class SeedAgent extends AbstractAgent {
 	/**
 	 * 
 	 */
-	public SeedAgent(ArrayList<String> roles, String participantID, UUID authcode, Location position, int communicationRange) {
+	public SeedAgent(ArrayList<String> roles, String participantID, UUID authcode, Location position, int communicationRange, ArrayList<String> tokenlist) {
 		super();
-		dm = new SeedPlayerModel(roles, participantID, authcode, position, communicationRange);
+		dm = new SeedPlayerModel(roles, participantID, authcode, position, communicationRange, tokenlist);
 	}
 
 	@Override
@@ -35,6 +31,7 @@ public class SeedAgent extends AbstractAgent {
 		super.initialise(environmentConnector);
 		// any other initialisation you want to do.
 		interpreter.addPlan(new AnswerRequestPlan(getPlayerDataModel(), interpreter, getId(), "requesttoken"));
+		interpreter.addPlan(new ConnectionPlan(getPlayerDataModel(), interpreter, getId()));
 	}
 
 	@Override
@@ -72,7 +69,7 @@ public class SeedAgent extends AbstractAgent {
 			Integer lastRequestTime = dm.lastRequest.get(neighbour);
 			if (lastRequestTime == null || dm.getTime() - lastRequestTime > 20) {
 				dm.lastRequest.put(neighbour, new Integer((int) dm.getTime()));
-				dm.myEnvironment.act(new TokenRequestMessage(neighbour, getId(), null, dm.authcodestring, dm.getTime()), getId(), dm.authcode);
+				dm.myEnvironment.act(new TokenRequestMessage(neighbour, getId(), null, dm.authcodestring, dm.getTime()), getId(), dm.environmentAuthCode);
 			}
 		}
 	

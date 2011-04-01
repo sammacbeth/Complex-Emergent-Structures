@@ -27,12 +27,12 @@ public class Interpreter {
 
 	public void printPlans(){
 
-		System.out.println("Plans.length = " + plans.size());
+		//System.out.println("Plans.length = " + plans.size());
 
 		Iterator it_plans = plans.iterator(); 
 		while (it_plans.hasNext()){	
 			Plan temp = (Plan)it_plans.next();
-			System.out.println(temp.toString());
+			//System.out.println(temp.toString());
 		}
 
 	}
@@ -66,7 +66,7 @@ public class Interpreter {
 
 			if (temp.isTimedOut(time)){
 			 	this.addInput(new Signal(Plan.TIME_OUT, temp.getMyKey(), time));
-			 	System.out.println("Interpreter sent a timeout signal to " + temp.toString());
+			 	//System.out.println("Interpreter sent a timeout signal to " + temp.toString());
 			}
 		}
 	}
@@ -103,7 +103,7 @@ public class Interpreter {
 				if (inputReceived == null)
 					continue;
 
-				System.out.println("	received :" + inputReceived.toString());
+				//System.out.println("	received :" + inputReceived.toString());
 
 				//  System.out.println();
 
@@ -121,7 +121,7 @@ public class Interpreter {
 					}
 				}
 
-				System.out.println( "        	" + canHandleInput.size() + " Plans canhandle it");
+				//System.out.println( "        	" + canHandleInput.size() + " Plans canhandle it");
 
 				// not all plans are able to run if another plan is already active.
 				// the Plan.inhibits() method allows us to do resource control
@@ -155,7 +155,7 @@ public class Interpreter {
 				}
 
 				if (notinhibited.size() <= 0){
-					System.out.println( " No Plans Left after inhibition ");
+					//System.out.println( " No Plans Left after inhibition ");
 				} else {
 
 					Plan theplan = notinhibited.get(random.nextInt(notinhibited.size()));

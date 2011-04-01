@@ -5,35 +5,42 @@
          <event class="presage.events.CoreEvents$ActivateParticipant">
             <participantname>seed0</participantname>
          </event>
-         <uuidstring>94dacf7e-4a00-43a1-98c3-904c4580736e</uuidstring>
+         <uuidstring>084c431d-c5db-4389-9bc8-3224d2f5406e</uuidstring>
+      </scriptedEvent>
+      <scriptedEvent>
+         <executiontime>0</executiontime>
+         <event class="presage.events.CoreEvents$ActivateParticipant">
+            <participantname>seed1</participantname>
+         </event>
+         <uuidstring>143ac536-874b-41ed-b3aa-67571b81987b</uuidstring>
       </scriptedEvent>
       <scriptedEvent>
          <executiontime>0</executiontime>
          <event class="presage.events.CoreEvents$ActivateParticipant">
             <participantname>cell0</participantname>
          </event>
-         <uuidstring>9c270c56-f574-4919-89a2-3e2d03af45a7</uuidstring>
+         <uuidstring>701dadec-5fdd-42e3-9a0b-168e26e4ba7a</uuidstring>
       </scriptedEvent>
       <scriptedEvent>
          <executiontime>0</executiontime>
          <event class="presage.events.CoreEvents$ActivateParticipant">
             <participantname>cell1</participantname>
          </event>
-         <uuidstring>f9ecf9b1-2796-457b-8d4b-f5e5897b5873</uuidstring>
+         <uuidstring>c05826b3-549a-4155-839c-6ad39f3b946d</uuidstring>
       </scriptedEvent>
       <scriptedEvent>
          <executiontime>0</executiontime>
          <event class="presage.events.CoreEvents$ActivateParticipant">
             <participantname>cell2</participantname>
          </event>
-         <uuidstring>1ccc833c-f9a3-481a-98e0-4b3affac6db0</uuidstring>
+         <uuidstring>1ab39a45-0f68-42ce-b092-68514f7fd2d7</uuidstring>
       </scriptedEvent>
       <scriptedEvent>
          <executiontime>0</executiontime>
          <event class="presage.events.CoreEvents$ActivateParticipant">
             <participantname>cell3</participantname>
          </event>
-         <uuidstring>ea213ec6-1453-4310-a6cc-7347f7b9d0bc</uuidstring>
+         <uuidstring>4d3c87f3-1d23-44bc-8d84-10503673400d</uuidstring>
       </scriptedEvent>
    </events>
    <preevents/>

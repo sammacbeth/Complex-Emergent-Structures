@@ -3,70 +3,99 @@
       <entry>
          <string>cell0</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell0" authcodestring="cdf2019b-a547-4412-abb4-45ab9caead25" communicationRange="20" simSize="500">
+            <dm participantID="cell0" authcodestring="c145a9b3-df9f-4657-b275-fc90635c199d" communicationRange="20" simSize="200">
                <myId>cell0</myId>
                <time>0</time>
                <roles>
                   <string>seed</string>
                </roles>
                <randomseed>0</randomseed>
-               <position x="474" y="424"/>
+               <tokenList>
+                  <string>a</string>
+               </tokenList>
+               <position x="106" y="5"/>
             </dm>
          </participant>
       </entry>
       <entry>
          <string>cell1</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell1" authcodestring="1bb76464-4831-4ef6-a398-67b10dede84b" communicationRange="20" simSize="500">
+            <dm participantID="cell1" authcodestring="a89470c9-7c4f-4b60-9b2b-a51cee44d23f" communicationRange="20" simSize="200">
                <myId>cell1</myId>
                <time>0</time>
                <roles>
                   <string>seed</string>
                </roles>
                <randomseed>0</randomseed>
-               <position x="6" y="105"/>
+               <tokenList>
+                  <string>b</string>
+               </tokenList>
+               <position x="54" y="91"/>
             </dm>
          </participant>
       </entry>
       <entry>
          <string>cell2</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell2" authcodestring="7dd29579-d3df-4d12-9366-50ad6c5f177f" communicationRange="20" simSize="500">
+            <dm participantID="cell2" authcodestring="0d1c0dd2-6dfd-40e9-8d01-b67260c1996f" communicationRange="20" simSize="200">
                <myId>cell2</myId>
                <time>0</time>
                <roles>
                   <string>seed</string>
                </roles>
                <randomseed>0</randomseed>
-               <position x="354" y="191"/>
+               <tokenList/>
+               <position x="122" y="121"/>
             </dm>
          </participant>
       </entry>
       <entry>
          <string>cell3</string>
          <participant class="structures.CellAgent">
-            <dm participantID="cell3" authcodestring="ab038470-2a9f-4b29-a632-4245a8f51a69" communicationRange="20" simSize="500">
+            <dm participantID="cell3" authcodestring="fb28b695-d446-44d1-8125-529018e715c1" communicationRange="20" simSize="200">
                <myId>cell3</myId>
                <time>0</time>
                <roles>
                   <string>seed</string>
                </roles>
                <randomseed>0</randomseed>
-               <position x="222" y="321"/>
+               <tokenList/>
+               <position x="31" y="103"/>
             </dm>
          </participant>
       </entry>
       <entry>
          <string>seed0</string>
          <participant class="structures.SeedAgent">
-            <dm participantID="seed0" authcodestring="06bc249d-2eaa-4abd-a349-3d2703ef989e" communicationRange="20">
+            <dm participantID="seed0" authcodestring="ffb4f286-3bd9-4f7f-8191-82751ab134c3" communicationRange="20">
                <myId>seed0</myId>
                <time>0</time>
                <roles>
                   <string>seed</string>
                </roles>
                <randomseed>0</randomseed>
-               <position x="487" y="92"/>
+               <tokenList>
+                  <string>a</string>
+               </tokenList>
+               <position x="87" y="92"/>
+            </dm>
+         </participant>
+      </entry>
+      <entry>
+         <string>seed1</string>
+         <participant class="structures.SeedAgent">
+            <dm participantID="seed1" authcodestring="cdb2dbf9-0542-4bb6-ac20-def200082ffa" communicationRange="20">
+               <myId>seed1</myId>
+               <time>0</time>
+               <roles>
+                  <string>seed</string>
+               </roles>
+               <randomseed>0</randomseed>
+               <tokenList>
+                  <string>a</string>
+                  <string>b</string>
+               </tokenList>
+               <position x="74" y="24"/>
             </dm>
          </participant>
       </entry>
