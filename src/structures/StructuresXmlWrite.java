@@ -3,6 +3,7 @@ package structures;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public class StructuresXmlWrite {
 	 */
 	public static void main(String[] args) {
 		
-		int simSize = 200;
+		int simSize = 400;
 		int communicationRange = 20;
 
 		PresageConfig presageConfig = new PresageConfig();
@@ -58,13 +59,29 @@ public class StructuresXmlWrite {
 		seedRoles.add("seed");
 		TreeMap<String, SeedAgent> seeds = new TreeMap<String, SeedAgent>();
 		
+		Random r = new Random();
+		double achance = 2;
+		double bchance = 0;
+		double cchance = 0;
 		ArrayList<String>[] seedTokens = new ArrayList[seedcount];
 		for(int ind=0; ind<seedcount; ind++) {
 			seedTokens[ind] = new ArrayList<String>();
+			if(r.nextDouble() < achance) {
+				seedTokens[ind].add("a");
+			} else {
+				achance = achance + (1-achance)/(seedcount-1);
+			}
+			if(r.nextDouble() < bchance) {
+				seedTokens[ind].add("b");	
+			} else {
+				bchance = bchance + (1-bchance)/(seedcount-1);
+			}
+			if(r.nextDouble() < cchance) {
+				seedTokens[ind].add("c");
+			} else {
+				cchance = cchance + (1-cchance)/(seedcount-1);
+			}
 		}
-		seedTokens[0].add("a");
-		seedTokens[1].add("a");
-		seedTokens[1].add("b");
 		
 		for(int i=0; i<seedcount; i++) {
 			Location l = new Location(rand.nextInt(simSize), rand.nextInt(simSize));
@@ -74,17 +91,18 @@ public class StructuresXmlWrite {
 		parts.putAll(seeds);
 		
 		// cells
-		int cellcount = 4;
+		int cellcount = 20;
 		ArrayList<String> cellRoles = new ArrayList<String>();
 		cellRoles.add("cell");
 		TreeMap<String, CellAgent> cells = new TreeMap<String, CellAgent>();
 
+		achance = 0.7;
+		bchance = 0.2;
+		cchance = 0.5;
 		ArrayList<String>[] cellTokens = new ArrayList[cellcount];
 		for(int ind=0; ind<cellcount; ind++) {
 			cellTokens[ind] = new ArrayList<String>();
 		}
-		cellTokens[0].add("a");
-		cellTokens[1].add("b");
 		
 		for(int i=0; i<cellcount; i++) {
 			Location l = new Location(rand.nextInt(simSize), rand.nextInt(simSize));

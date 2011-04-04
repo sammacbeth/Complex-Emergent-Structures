@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.simpleframework.xml.Attribute;
@@ -19,13 +20,15 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@ElementList
 	public ArrayList<String> tokenList = new ArrayList<String>();
 	
+	public ArrayList<String> effectiveTokens = new ArrayList<String>(tokenList);
+	
 	public Map<String, Integer> lastRequest = new HashMap<String, Integer>();
 	
 	@Attribute
 	public String participantID;
 	
 	@Attribute
-	public String authcodestring;	
+	public String authcodestring;
 	
 	public UUID authcode;
 	
@@ -56,6 +59,7 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 		this.position = position;
 		this.communicationRange = range;
 		this.tokenList = tokenlist;
+		this.effectiveTokens = tokenList;
 	}
 	
 	@Override
@@ -112,6 +116,21 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Override
 	public void setMaster(String master) {
 		System.err.println("Seed player assigned master!!");
+	}
+	
+	@Override
+	public void setTokens(List<String> tokens) {
+		tokenList = new ArrayList<String>(tokens);
+	}
+	
+	@Override
+	public void connectTo(String target) {
+		if(this.getMaster() == null) {
+			Integer[] attempt = getConnectionAttempts().get(target);
+			if(attempt == null || getTime() - attempt[0] > 10) {
+				myEnvironment.act(new ConnectionRequestMessage(target, getId(), null, environmentAuthCode.toString(), getTime(), new Random().nextInt(), this), myId, environmentAuthCode);
+			}
+		}
 	}
 	
 }

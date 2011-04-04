@@ -41,4 +41,6 @@ public interface Connectable {
 	 */
 	public Map<String, Integer[]> getConnectionAttempts();
 	
+	public void connectTo(String target);
+	
 }

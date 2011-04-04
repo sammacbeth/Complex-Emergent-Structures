@@ -40,6 +40,7 @@ public class CellAgent extends AbstractAgent {
 		interpreter.addPlan(new AnswerRequestPlan(getPlayerDataModel(), interpreter, getId(), "requesttoken"));
 		interpreter.addPlan(new ConnectionPlan(getPlayerDataModel(), interpreter, getId()));
 		interpreter.addPlan(new MoveHandler(getPlayerDataModel(), interpreter, getId(), "position"));
+		interpreter.addPlan(new TokensHandler(getPlayerDataModel(), interpreter, getId()));
 	}
 
 	@Override
@@ -73,10 +74,16 @@ public class CellAgent extends AbstractAgent {
 		// if there is cell y, compare the tokens of i and y
 		// if token of i and y are identical, do nothing
 		// else call attachCellToSeed(int i, int y)
+		boolean connectionAttempted = false;
 		for (String neighbour : dm.connections) {
 			// skip slaves
 			if(dm.getSlaves().contains(neighbour)) 
 				continue;
+			
+			/*if(!connectionAttempted && rand.nextDouble() > dm.connectionProb()) {
+				connectionAttempted = true;
+				dm.connectTo(neighbour);
+			}*/
 			// 1 never talked
 			// 2 time old enough
 			// 3 time too new

@@ -1,9 +1,11 @@
 package structures;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -73,7 +75,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 				if(m != null) {
 					logger.debug("Calculating follow move: "+f.getParticipantId()+"->"+f.getTarget()+" ang="+ angle +" offset="+offset+" targetloc="+t+" move="+m);
 					act(m, f.getParticipantId(), dmodel.cellModels.get(f.getParticipantId()).environmentAuthCode);
-				}					
+				}
 			}
 		}
 		follows = new LinkedList<Follow>();
@@ -81,6 +83,45 @@ public class StructuresEnvironment extends AbstractEnvironment {
 
 	@Override
 	protected void updatePerceptions() {
+		
+		/**
+		 * Utility class for datastructure of tokens each cell has/
+		 */
+		class CellTokenMap {
+			Map<String,Set<String>> cellTokens = new HashMap<String, Set<String>>(dmodel.cellModels.size());
+			
+			public void addToken(String cell, String token) {
+				if(cellTokens.containsKey(cell)) {
+					cellTokens.get(cell).add(token);
+				} else {
+					cellTokens.put(cell, new HashSet<String>());
+					addToken(cell, token);
+				}
+			}
+			
+			public void addTokens(String cell, List<String> tokens) {
+				if(cellTokens.containsKey(cell)) {
+					cellTokens.get(cell).addAll(tokens);
+				} else {
+					cellTokens.put(cell, new HashSet<String>());
+					addTokens(cell, tokens);
+				}
+			}
+			
+			public Map<String,Set<String>> getMap() {
+				return cellTokens;
+			}
+			
+			public Set<String> getTokens(String cell) {
+				if(cellTokens.containsKey(cell)) {
+					return cellTokens.get(cell);
+				} else {
+					cellTokens.put(cell, new HashSet<String>());
+					return getTokens(cell);
+				}
+			}
+		}
+		
 		Set<String> players = new HashSet<String>(dmodel.cellModels.keySet());
 		players.addAll(dmodel.seedModels.keySet());
 		for(String player : players) {
@@ -102,7 +143,39 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			sim.players.get(player).enqueueInput(new ConnectionsInput(dmodel.getTime(), connected));
 			//logger.debug("Sending "+ connected.size() +" connections to "+player);
 		}
+		
+		CellTokenMap cellTokens = new CellTokenMap();
+		// find seed -> cell connections & propagate tokens
+		for(String seed : dmodel.seedModels.keySet()) {
+			SeedPlayerModel spm = dmodel.seedModels.get(seed);
+			for(String cell : spm.getSlaves()) {
+				cellTokens.addTokens(cell, spm.getTokens());
+			}
+			/*for(String cell : spm.getConnections()) {
+				cellTokens.addTokens(cell, spm.getTokens());
+			}*/
+		}
+		// iterate cells and propagate tokens to their connected
+		for(String cell : dmodel.cellModels.keySet()) {
+			CellPlayerModel cpm = dmodel.cellModels.get(cell);
+			Set<String> myTokens = cellTokens.getTokens(cell);
+			List<String> myTokensList = new ArrayList<String>(myTokens);
+			// master
+			if(cpm.getMaster() != null) {
+				cellTokens.addTokens(cpm.getMaster(), myTokensList);
+			}
+			// slaves
+			for(String slave : cpm.getSlaves()) {
+				cellTokens.addTokens(slave, myTokensList);
+			}
+			// weak connections
+			for(String conns : cpm.getConnections()) {
+				cellTokens.addTokens(conns, myTokensList);
+			}
+		}
+		// notify players of their connections + position
 		for(String player : dmodel.cellModels.keySet()) {
+			sim.players.get(player).enqueueInput(new TokensInput(dmodel.getTime(), new ArrayList<String>(cellTokens.getTokens(player))));
 			sim.players.get(player).enqueueInput(new PositionInput(dmodel.cellModels.get(player).position, dmodel.getTime()));
 		}
 	}
@@ -215,10 +288,10 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			alreadyMoved.add(actorID);
 			
 			// do slaves
-			/*for(String slave : dmodel.cellModels.get(actorID).getSlaves()) {
+			for(String slave : dmodel.cellModels.get(actorID).getSlaves()) {
 				handle(action, slave);
 				//sim.players.get(slave).enqueueInput(new PositionInput(newPos, dmodel.getTime()));
-			}*/
+			}
 			
 			return null;
 		}

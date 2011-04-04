@@ -22,4 +22,14 @@ public class TokenRequestAnswer extends Message implements HasTokens {
 		return TokenList;
 	}
 
+	/*@Override
+	public List<String> getOwnTokens() {
+		return TokenList;
+	}*/
+
+	@Override
+	public void setTokens(List<String> tokens) {
+		
+	}
+
 }

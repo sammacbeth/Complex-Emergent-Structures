@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.simpleframework.xml.Attribute;
@@ -18,6 +19,8 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	// every cell has a list of tokens
 	@ElementList
 	public ArrayList<String> tokenList = new ArrayList<String>();
+	
+	public ArrayList<String> effectiveTokens = new ArrayList<String>();
 	
 	public Map<String, Integer> lastRequest = new HashMap<String, Integer>();
 	
@@ -62,6 +65,7 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 		this.communicationRange = range;
 		this.simSize = simSize;
 		this.tokenList = tokenlist;
+		this.effectiveTokens = tokenList;
 	}
 	
 	@Override
@@ -97,7 +101,7 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 
 	@Override
 	public List<String> getTokens() {
-		return tokenList;
+		return effectiveTokens;
 	}
 
 	@Override
@@ -118,6 +122,25 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Override
 	public void setMaster(String master) {
 		this.master = master;
+	}
+
+	@Override
+	public void setTokens(List<String> tokens) {
+		this.effectiveTokens = new ArrayList<String>(tokens);
+	}
+
+	@Override
+	public void connectTo(String target) {
+		if(this.getMaster() == null) {
+			Integer[] attempt = getConnectionAttempts().get(target);
+			if(attempt == null || getTime() - attempt[0] > 10) {
+				myEnvironment.act(new ConnectionRequestMessage(target, getId(), null, environmentAuthCode.toString(), getTime(), new Random().nextInt(), this), myId, environmentAuthCode);
+			}
+		}
+	}
+
+	public double connectionProb() {
+		return 0.5;
 	}
 
 }

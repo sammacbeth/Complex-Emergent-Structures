@@ -46,7 +46,7 @@ public class StructuresViewer extends JPanel implements Plugin {
 	private void drawAgent(Graphics g, Location l, Color c, String name) {
 		g.setColor(c);
 		g.fillOval(l.getX() - agentSize/2, l.getY() - agentSize/2, agentSize, agentSize);
-		g.drawString(name, (l.getX() - 1), (l.getY() - 1));
+		//g.drawString(name, (l.getX() - 1), (l.getY() - 1));
 	}
 	
 	@Override

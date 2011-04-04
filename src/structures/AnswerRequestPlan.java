@@ -18,11 +18,13 @@ public class AnswerRequestPlan extends Plan {
 
 	private final Logger logger = Logger.getLogger(AnswerRequestPlan.class);
 	HasTokens tokens;
+	Connectable conn;
 	
 	public AnswerRequestPlan(APlayerDataModel dm, Interpreter interpreter,
 			String myKey, String type) {
 		super(dm, interpreter, myKey, type);
 		tokens = (HasTokens) dm;
+		conn = (Connectable) dm;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class AnswerRequestPlan extends Plan {
 			if(!tokens.getTokens().containsAll(((TokenRequestAnswer) input).getTokens())) {
 				logger.debug(dm.getId() +": "+ ((TokenRequestAnswer) input).getFrom() +" has tokens I want!!");
 				// TODO establish a connection with cell/seed
-				dm.myEnvironment.act(new ConnectionRequestMessage(((TokenRequestAnswer) input).getFrom(), dm.getId(), null, dm.environmentAuthCode.toString(), dm.getTime(), new Random().nextInt(), (Connectable) dm), dm.myId, dm.environmentAuthCode);
+				conn.connectTo(((TokenRequestAnswer) input).getFrom());
 			}
 		}
 	}
