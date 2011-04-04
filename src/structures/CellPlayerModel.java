@@ -45,7 +45,7 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	
 	public String master = null;
 	
-	public final List<String> slaves = new ArrayList<String>();
+	public List<String> slaves = new ArrayList<String>();
 	
 	public final Map<String, Integer[]> connectionAttempts = new HashMap<String, Integer[]>();
 	
@@ -141,6 +141,11 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 
 	public double connectionProb() {
 		return 0.5;
+	}
+
+	@Override
+	public void setSlaves(List<String> slaves) {
+		this.slaves = slaves;
 	}
 
 }

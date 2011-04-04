@@ -20,7 +20,7 @@ public class CellAgent extends AbstractAgent {
 	
 	final protected Random rand = new Random();
 	
-	final int maxSpeed = 5;
+	final int maxSpeed = 2;
 	
 	Location randomTarget = null;
 	int randomSpend = 0;

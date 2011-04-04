@@ -40,7 +40,7 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	
 	public List<String> connections = new LinkedList<String>();
 	
-	public final List<String> slaves = new ArrayList<String>();
+	public List<String> slaves = new ArrayList<String>();
 	
 	public final Map<String, Integer[]> connectionAttempts = new HashMap<String, Integer[]>();
 	
@@ -131,6 +131,11 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 				myEnvironment.act(new ConnectionRequestMessage(target, getId(), null, environmentAuthCode.toString(), getTime(), new Random().nextInt(), this), myId, environmentAuthCode);
 			}
 		}
+	}
+
+	@Override
+	public void setSlaves(List<String> slaves) {
+		this.slaves = slaves;
 	}
 	
 }

@@ -32,7 +32,9 @@ public interface Connectable {
 	 * Get the slaves of this agent (who is connected to it).
 	 * @return List of participant IDs of connected agents.
 	 */
-	public List<String> getSlaves(); 
+	public List<String> getSlaves();
+	
+	public void setSlaves(List<String> slaves);
 	
 	/**
 	 * Gets connection attempts we have made.

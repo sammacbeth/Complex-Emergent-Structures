@@ -81,6 +81,10 @@ public class Location implements Serializable {
 	public int getMagnitude() {
 		return (int) Math.round(Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2)));
 	}
+
+	public double getMagnitudeDouble() {
+		return Math.sqrt(Math.pow(this.getX(), 2) + Math.pow(this.getY(), 2));
+	}
 	
 	/**
 	 * Gets the angle of this vector from the x axis.

@@ -1,5 +1,7 @@
 package structures;
 
+import java.util.ArrayList;
+
 import presage.Input;
 import presage.abstractparticipant.APlayerDataModel;
 import presage.abstractparticipant.Interpreter;
@@ -8,11 +10,13 @@ import presage.abstractparticipant.plan.Plan;
 public class TokensHandler extends Plan {
 
 	HasTokens tokens;
+	Connectable conn;
 	
 	public TokensHandler(APlayerDataModel dm, Interpreter interpreter,
 			String myKey) {
 		super(dm, interpreter, myKey, "tokens");
 		tokens = (HasTokens) dm;
+		conn = (Connectable) dm;
 	}
 
 	@Override
@@ -26,6 +30,7 @@ public class TokensHandler extends Plan {
 		if(input instanceof TokensInput) {
 			TokensInput t = (TokensInput) input;
 			tokens.setTokens(t.getTokens());
+			conn.setSlaves(new ArrayList<String>(t.getSlaves()));
 		}
 	}
 

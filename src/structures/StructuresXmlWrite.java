@@ -45,6 +45,7 @@ public class StructuresXmlWrite {
 		
 		PluginManager pm = new PluginManager();
 		pm.addPlugin(new StructuresViewer());
+		pm.addPlugin(new LatticePlugin());
 		
 		EventScriptManager ms = new EventScriptManager();
 		

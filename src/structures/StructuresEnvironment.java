@@ -32,6 +32,8 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	
 	ArrayList<String> alreadyMoved = new ArrayList<String>();
 	
+	LinkedList<Move> moves = new LinkedList<Move>();
+	
 	LinkedList<Follow> follows = new LinkedList<Follow>();
 	
 	Simulation sim;
@@ -77,9 +79,18 @@ public class StructuresEnvironment extends AbstractEnvironment {
 					act(m, f.getParticipantId(), dmodel.cellModels.get(f.getParticipantId()).environmentAuthCode);
 				}
 			}
+			//moves.add(Move.generateMove(f.getParticipantId(), fLoc, targetLoc, 2));
 		}
+		
+		for(Move m : moves) {
+			
+		}
+		
+		moves = new LinkedList<Move>();
 		follows = new LinkedList<Follow>();
 	}
+	
+	
 
 	@Override
 	protected void updatePerceptions() {
@@ -122,6 +133,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			}
 		}
 		
+		// Network connections
 		Set<String> players = new HashSet<String>(dmodel.cellModels.keySet());
 		players.addAll(dmodel.seedModels.keySet());
 		for(String player : players) {
@@ -144,7 +156,9 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			//logger.debug("Sending "+ connected.size() +" connections to "+player);
 		}
 		
+		// token propagation + interagent connections
 		CellTokenMap cellTokens = new CellTokenMap();
+		CellTokenMap connections = new CellTokenMap(); // this data structure works for connections too!
 		// find seed -> cell connections & propagate tokens
 		for(String seed : dmodel.seedModels.keySet()) {
 			SeedPlayerModel spm = dmodel.seedModels.get(seed);
@@ -163,19 +177,24 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			// master
 			if(cpm.getMaster() != null) {
 				cellTokens.addTokens(cpm.getMaster(), myTokensList);
+				myTokens.addAll(cellTokens.getTokens(cpm.getMaster()));
+				myTokensList = new ArrayList<String>(myTokens);
+				connections.addToken(cpm.getMaster(), cell);
 			}
 			// slaves
 			for(String slave : cpm.getSlaves()) {
 				cellTokens.addTokens(slave, myTokensList);
+				myTokens.addAll(cellTokens.getTokens(slave));
+				myTokensList = new ArrayList<String>(myTokens);
 			}
 			// weak connections
-			for(String conns : cpm.getConnections()) {
+			/*for(String conns : cpm.getConnections()) {
 				cellTokens.addTokens(conns, myTokensList);
-			}
+			}*/
 		}
 		// notify players of their connections + position
 		for(String player : dmodel.cellModels.keySet()) {
-			sim.players.get(player).enqueueInput(new TokensInput(dmodel.getTime(), new ArrayList<String>(cellTokens.getTokens(player))));
+			sim.players.get(player).enqueueInput(new TokensInput(dmodel.getTime(), new ArrayList<String>(cellTokens.getTokens(player)), connections.getTokens(player)));
 			sim.players.get(player).enqueueInput(new PositionInput(dmodel.cellModels.get(player).position, dmodel.getTime()));
 		}
 	}
@@ -284,14 +303,14 @@ public class StructuresEnvironment extends AbstractEnvironment {
 
 			// update the world state.
 			dmodel.cellModels.get(actorID).position = newPos;
-
+			//moves.add(moveAction);
 			alreadyMoved.add(actorID);
 			
 			// do slaves
-			for(String slave : dmodel.cellModels.get(actorID).getSlaves()) {
+			/*for(String slave : dmodel.cellModels.get(actorID).getSlaves()) {
 				handle(action, slave);
 				//sim.players.get(slave).enqueueInput(new PositionInput(newPos, dmodel.getTime()));
-			}
+			}*/
 			
 			return null;
 		}
