@@ -32,7 +32,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	
 	ArrayList<String> alreadyMoved = new ArrayList<String>();
 	
-	LinkedList<Move> moves = new LinkedList<Move>();
+	LinkedList<Force> forces = new LinkedList<Force>();
 	
 	LinkedList<Follow> follows = new LinkedList<Follow>();
 	
@@ -73,24 +73,84 @@ public class StructuresEnvironment extends AbstractEnvironment {
 				double angle = Location.minus(targetLoc, fLoc).getAngle();
 				Location offset = Location.fromPolar(-15, angle);
 				Location t = Location.add(targetLoc, offset);
-				Move m = Move.generateMove(f.getParticipantId(), fLoc, t, 5);
+				Move m = Move.generateMove(f.getParticipantId(), fLoc, t, 2);
 				if(m != null) {
 					logger.debug("Calculating follow move: "+f.getParticipantId()+"->"+f.getTarget()+" ang="+ angle +" offset="+offset+" targetloc="+t+" move="+m);
-					act(m, f.getParticipantId(), dmodel.cellModels.get(f.getParticipantId()).environmentAuthCode);
+					//act(m, f.getParticipantId(), dmodel.cellModels.get(f.getParticipantId()).environmentAuthCode);
+					forces.add(Force.fromMove(m));
 				}
 			}
-			//moves.add(Move.generateMove(f.getParticipantId(), fLoc, targetLoc, 2));
+			//forces.add(Force.fromMove(Move.generateMove(f.getParticipantId(), fLoc, targetLoc, 2)));
 		}
 		
-		for(Move m : moves) {
-			
+		for(Force m : forces) {
+			Location l = dmodel.cellModels.get(m.getParticipantId()).getLocation();
+			for(String cell : dmodel.cellModels.keySet()) {
+				if(cell == m.getParticipantId()) {
+					continue;
+				}
+				m.add(getForceOn(l, dmodel.cellModels.get(cell).getLocation()));
+			}
+			for(String seed : dmodel.seedModels.keySet()) {
+				m.add(getForceOn(l, dmodel.seedModels.get(seed).getLocation()));
+			}
+			processMove(m.toMove());
 		}
 		
-		moves = new LinkedList<Move>();
+		forces = new LinkedList<Force>();
 		follows = new LinkedList<Follow>();
 	}
 	
+	/**
+	 * Force item at location b exerts on item at location a
+	 * @param a
+	 * @param b
+	 * @return
+	 */
+	private Force getForceOn(Location a, Location b) {
+		final int maxforce = 6;
+		final int repulsionDistance = 15;
+		int distance = Location.distanceBetween(a, b);
+		double mag;
+		if(distance < 10) {
+			mag = maxforce;
+			//mag = -(maxforce/(repulsionDistance*repulsionDistance)) * distance*distance + maxforce;
+		} else if(distance < 15) {
+			mag = 2;
+		} else {
+		
+			mag = 0;
+			return new Force(null, 0,0);
+		}
+		double angle = Location.minus(a, b).getAngle();
+		return Force.fromPolar(mag, angle);
+	}
 	
+	private void processMove(Move moveAction) {
+		Location oldPos = dmodel.cellModels.get(moveAction.getParticipantId()).getLocation();
+
+		int dx =  moveAction.getMoveX();
+		int dy = moveAction.getMoveY();
+
+		Location newPos = Location.add(oldPos, new Location(dx, dy));
+
+		// check bounds and stop where necessary
+		if ( newPos.getX() > dmodel.width) {
+			newPos.setX(dmodel.width);
+		}
+		if (newPos.getY() > dmodel.height) {
+			newPos.setY(dmodel.height);
+		}
+		if ( newPos.getX() < 0) {
+			newPos.setX(0);
+		}
+		if (newPos.getY() < 0) {
+			newPos.setY(0);
+		}
+
+		// update the world state.
+		dmodel.cellModels.get(moveAction.getParticipantId()).position = newPos;
+	}
 
 	@Override
 	protected void updatePerceptions() {
@@ -280,7 +340,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			if ( alreadyMoved.contains(actorID))
 				return null;
 
-			Location oldPos = dmodel.cellModels.get(actorID).getLocation();
+			/*Location oldPos = dmodel.cellModels.get(actorID).getLocation();
 
 			int dx =  moveAction.getMoveX();
 			int dy = moveAction.getMoveY();
@@ -302,8 +362,8 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			}
 
 			// update the world state.
-			dmodel.cellModels.get(actorID).position = newPos;
-			//moves.add(moveAction);
+			dmodel.cellModels.get(actorID).position = newPos;*/
+			forces.add(Force.fromMove(moveAction));
 			alreadyMoved.add(actorID);
 			
 			// do slaves

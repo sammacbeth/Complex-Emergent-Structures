@@ -33,7 +33,7 @@ public class Move implements Action {
 		Location toGo = Location.minus(targetLocation, currentLocation);
 		int distanceTo = toGo.getMagnitude();
 		if(currentLocation.equals(targetLocation))
-			return null;
+			return new Move(participantId, 0, 0);
 		else if(distanceTo <= maxSpeed)
 			return new Move(participantId, toGo.getX(), toGo.getY());
 		else {
@@ -42,6 +42,11 @@ public class Move implements Action {
 			Location move = Location.fromPolar(mag, angle);
 			return new Move(participantId, move.getX(), move.getY());
 		}
+	}
+	
+	public void add(Move m) {
+		this.moveX += m.moveX;
+		this.moveY += m.moveY;
 	}
 	
 	public int getMoveX(){
