@@ -30,7 +30,8 @@ public class StructuresViewer extends JPanel implements Plugin {
 	StructuresEnvDataModel dmodel;
 	
 	Color seedColor = Color.RED;
-	Color cellColor = Color.BLACK;
+	Color cellColor = new Color(0, 255, 0, 100);
+	Color textColor = Color.BLACK;
 	
 	JButton tokenButton = new JButton("Toggle Tokens");
 	
@@ -38,7 +39,9 @@ public class StructuresViewer extends JPanel implements Plugin {
 	
 	boolean showTokens = false;
 	
-	int agentSize = 10;
+	private static final int sizeMod = 3;
+	
+	int agentSize = 10*sizeMod;
 	
 	public void paint(Graphics g) {
 		class Tuple<T> {
@@ -59,7 +62,7 @@ public class StructuresViewer extends JPanel implements Plugin {
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, dmodel.width, dmodel.height);
+		g.fillRect(0, 0, dmodel.width*sizeMod, dmodel.height*sizeMod);
 		
 		g.setColor(Color.blue);
 		g.drawString("Cycle = " + dmodel.time, 5, 15);
@@ -97,7 +100,7 @@ public class StructuresViewer extends JPanel implements Plugin {
 			try {
 				Location loc1 = link.param1;
 				Location loc2 = link.param2;
-				g.drawLine(loc1.getX(), loc1.getY(), loc2.getX(), loc2.getY());
+				g.drawLine(loc1.getX()*sizeMod, loc1.getY()*sizeMod, loc2.getX()*sizeMod, loc2.getY()*sizeMod);
 			} catch (NullPointerException e) {}
 		}
 	}
@@ -112,10 +115,11 @@ public class StructuresViewer extends JPanel implements Plugin {
 	
 	private void drawAgent(Graphics g, Location l, Color c, String name, List<String> tokens) {
 		g.setColor(c);
-		g.fillOval(l.getX() - agentSize/2, l.getY() - agentSize/2, agentSize, agentSize);
+		g.fillOval(l.getX()*sizeMod - agentSize/2, l.getY()*sizeMod - agentSize/2, agentSize, agentSize);
 		//g.drawString(name, (l.getX() - 1), (l.getY() - 1));
 		if(showTokens) {
-			g.drawString(tokens.toString(), (l.getX() + 4), (l.getY() - 6));
+			g.setColor(textColor);
+			g.drawString(name+":"+tokens.toString(), (l.getX()*sizeMod + 4*sizeMod), (l.getY()*sizeMod - 4*sizeMod));
 		}
 	}
 	

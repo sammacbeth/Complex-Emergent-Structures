@@ -22,7 +22,7 @@ public class StructuresXmlWrite {
 	 */
 	public static void main(String[] args) {
 		
-		int simSize = 400;
+		int simSize = 200;
 		int communicationRange = 20;
 
 		PresageConfig presageConfig = new PresageConfig();
@@ -69,14 +69,14 @@ public class StructuresXmlWrite {
 		seedTokens[1].add("b");
 		
 		for(int i=0; i<seedcount; i++) {
-			Location l = new Location((100+200*i)%simSize, (200)%simSize);
+			Location l = new Location((50+100*i)%simSize, (100)%simSize);
 			seeds.put("seed"+i, new SeedAgent(seedRoles, "seed"+i, UUID.randomUUID(), l, communicationRange, seedTokens[i]));
 			ms.addEvent(new ScriptedEvent ( 0 , UUID.randomUUID().toString(), new presage.events.CoreEvents.ActivateParticipant("seed"+i)));
 		}
 		parts.putAll(seeds);
 		
 		// cells
-		int cellcount = 150;
+		int cellcount = 50;
 		ArrayList<String> cellRoles = new ArrayList<String>();
 		cellRoles.add("cell");
 		TreeMap<String, CellAgent> cells = new TreeMap<String, CellAgent>();

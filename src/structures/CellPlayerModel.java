@@ -169,4 +169,9 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 		this.state = s;
 	}
 
+	@Override
+	public Set<String> getProxyConnections() {
+		return this.proxies;
+	}
+
 }

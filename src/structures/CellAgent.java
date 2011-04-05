@@ -47,7 +47,7 @@ public class CellAgent extends AbstractAgent {
 	@Override
 	public void execute() {
 		
-		logger.debug("Got "+ dm.connections.size() +" connections");
+		//logger.debug("Got "+ dm.connections.size() +" connections");
 		// process any inputs.
 		interpreter.processInputs();
 

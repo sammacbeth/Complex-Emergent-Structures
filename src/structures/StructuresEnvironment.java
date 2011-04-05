@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -25,6 +26,8 @@ import presage.environment.messages.ENVDeRegisterRequest;
 import presage.environment.messages.ENVRegisterRequest;
 import presage.environment.messages.ENVRegistrationResponse;
 import structures.CellPlayerModel.State;
+import structures.tree.Node;
+import structures.tree.Tree;
 
 public class StructuresEnvironment extends AbstractEnvironment {
 
@@ -231,61 +234,89 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		// token propagation + interagent connections
 		CellTokenMap cellTokens = new CellTokenMap();
 		CellTokenMap connections = new CellTokenMap(); // this data structure works for connections too!
-		// find seed -> cell connections & propagate tokens
+		
+		List<Tree> trees = new ArrayList<Tree>();
+		/*
+		 *  find tree heads
+		 */
+		
+		// seeds' trees
 		for(String seed : dmodel.seedModels.keySet()) {
 			SeedPlayerModel spm = dmodel.seedModels.get(seed);
-			for(String cell : spm.getSlaves()) {
-				cellTokens.addTokens(cell, spm.getTokens());
-			}
-			/*for(String cell : spm.getConnections()) {
-				cellTokens.addTokens(cell, spm.getTokens());
-			}*/
+			Node head = new Node(0, seed, null, seed);
+			trees.add(generateTree(head));
 		}
-		// iterate cells and propagate tokens to their connected
 		
-		List<Iterable<String>> cellIterators = new ArrayList<Iterable<String>>(2);
-		cellIterators.add(dmodel.cellModels.keySet());
-		List<String> reverseList = new LinkedList<String>(dmodel.cellModels.keySet());
-		Collections.reverse(reverseList);
-		cellIterators.add(reverseList);
-		cellIterators.add(dmodel.cellModels.keySet());
-		
-		for(Iterable<String> i : cellIterators) {
-			for(String cell : i) {
-				CellPlayerModel cpm = dmodel.cellModels.get(cell);
-				Set<String> myTokens = cellTokens.getTokens(cell);
-				List<String> myTokensList = new ArrayList<String>(myTokens);
-				// master
-				if(cpm.getMaster() != null) {
-					cellTokens.addTokens(cpm.getMaster(), myTokensList);
-					myTokens.addAll(cellTokens.getTokens(cpm.getMaster()));
-					myTokensList = new ArrayList<String>(myTokens);
-					connections.addToken(cpm.getMaster(), cell);
+		for(String cell : dmodel.cellModels.keySet()) {
+			for(Tree t : trees) {
+				if(t.nodes.containsKey(cell)) {
+					cellTokens.addTokens(cell, dmodel.seedModels.get(t.treeHead.getName()).getTokens());
 				}
-				// slaves
-				for(String slave : cpm.getSlaves()) {
-					cellTokens.addTokens(slave, myTokensList);
-					myTokens.addAll(cellTokens.getTokens(slave));
-					myTokensList = new ArrayList<String>(myTokens);
-				}
-				for(String proxy : cpm.proxies) {
-					if(Location.distanceBetween(cpm.getLocation(), ((HasLocation) dmodel.players.get(proxy)).getLocation()) <= 20) {
-						cellTokens.addTokens(proxy, myTokensList);
-						myTokens.addAll(cellTokens.getTokens(proxy));
-						myTokensList = new ArrayList<String>(myTokens);
-					}
-				}
-				// weak connections
-				/*for(String conns : cpm.getConnections()) {
-					cellTokens.addTokens(conns, myTokensList);
-				}*/
+			}
+			if(dmodel.cellModels.get(cell).getMaster() != null) {
+				connections.addToken(dmodel.cellModels.get(cell).getMaster(), cell);
 			}
 		}
+		
 		// notify players of their connections + position
 		for(String player : dmodel.cellModels.keySet()) {
 			sim.players.get(player).enqueueInput(new TokensInput(dmodel.getTime(), new ArrayList<String>(cellTokens.getTokens(player)), connections.getTokens(player)));
 			sim.players.get(player).enqueueInput(new PositionInput(dmodel.cellModels.get(player).position, dmodel.getTime()));
 		}
+	}
+	
+	private Tree generateTree(Node head) {
+		Tree t = new Tree();
+		t.treeHead = head;
+		t.nodes.put(head.getName(), head);
+		Queue<Node> q = new LinkedList<Node>();
+		q.addAll(generateTree(t, head));
+		while(q.size() > 0) {
+			q.addAll(generateTree(t, q.poll()));
+		}
+		return t;
+	}
+	
+	/**
+	 * Processes {@link Node} node in the {@link Tree} tree then returns
+	 * the {@link Set} of {@link Node}s on the next level of the tree.
+	 * @param t
+	 * @param node
+	 * @return
+	 */
+	private Set<Node> generateTree(Tree t, Node node) {
+		// breadth first tree generation.
+		Set<Node> nextlevel = new HashSet<Node>();
+		Connectable nodeCons = (Connectable)dmodel.players.get(node.getName());
+		// find slaves of node and add them to the set of nodes on the next level.
+		for(String slave : nodeCons.getSlaves()) {
+			Node n = node.createChild(slave);
+			if(!t.nodes.containsKey(n.getName())) {
+				node.addChild(n);
+				t.nodes.put(n.getName(), n);
+				nextlevel.add(n);
+			}
+		}
+		// find proxy connections in the tree
+		for(String proxy : nodeCons.getProxyConnections()) {
+			Node n = node.createChild(proxy);
+			if(!t.nodes.containsKey(n.getName())) {
+				node.addChild(n);
+				t.nodes.put(n.getName(), n);
+				nextlevel.add(n);
+			}
+		}
+		// master connection
+		if(nodeCons.getMaster() != null) {
+			Node n = node.createChild(nodeCons.getMaster());
+			if(!t.nodes.containsKey(n.getName())) {
+				node.addChild(n);
+				t.nodes.put(n.getName(), n);
+				nextlevel.add(n);
+			}
+		}
+		
+		return nextlevel;
 	}
 
 	@Override

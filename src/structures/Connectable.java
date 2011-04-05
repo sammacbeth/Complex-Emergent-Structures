@@ -5,6 +5,7 @@ package structures;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Interface for the data model of an agent who can connect
@@ -44,5 +45,7 @@ public interface Connectable {
 	public Map<String, Integer[]> getConnectionAttempts();
 	
 	public void connectTo(String target);
+	
+	public Set<String> getProxyConnections();
 	
 }

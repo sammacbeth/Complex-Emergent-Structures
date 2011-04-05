@@ -2,10 +2,12 @@ package structures;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import org.simpleframework.xml.Attribute;
@@ -147,6 +149,11 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Override
 	public void setState(State s) {
 		
+	}
+	
+	@Override
+	public Set<String> getProxyConnections() {
+		return new HashSet<String>();
 	}
 	
 }
