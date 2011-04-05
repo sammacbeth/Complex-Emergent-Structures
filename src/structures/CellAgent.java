@@ -10,6 +10,7 @@ import org.simpleframework.xml.Element;
 import presage.EnvironmentConnector;
 import presage.PlayerDataModel;
 import presage.abstractparticipant.APlayerDataModel;
+import structures.CellPlayerModel.State;
 
 public class CellAgent extends AbstractAgent {
 
@@ -53,12 +54,14 @@ public class CellAgent extends AbstractAgent {
 		// handle timeouts and tidy up ended plans.
 		interpreter.handleTimeouts(dm.time);
 		
+		checkSeedNeighbourhood();
+		
 		if(dm.getMaster() != null) {
 			// follow mode
 			dm.myEnvironment.act(new Follow(getId(), dm.getMaster()), getId(), dm.environmentAuthCode);
 		} else {
-			checkSeedNeighbourhood();
 			// random movement
+			dm.setState(State.MOBILE);
 			if(randomTarget == null || randomSpend == 0 || dm.getLocation().equals(randomTarget)) {
 				randomTarget = new Location(rand.nextInt(dm.simSize), rand.nextInt(dm.simSize));
 				randomSpend = rand.nextInt(dm.simSize/maxSpeed);

@@ -2,10 +2,12 @@ package structures;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import org.simpleframework.xml.Attribute;
@@ -16,6 +18,10 @@ import presage.abstractparticipant.APlayerDataModel;
 
 public class CellPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections, HasTokens, Connectable {
 
+	enum State { STATIC, MOBILE };
+	
+	State state = State.MOBILE;
+	
 	// every cell has a list of tokens
 	@ElementList
 	public ArrayList<String> tokenList = new ArrayList<String>();
@@ -46,6 +52,8 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	public String master = null;
 	
 	public List<String> slaves = new ArrayList<String>();
+	
+	public Set<String> proxies = new HashSet<String>();
 	
 	public final Map<String, Integer[]> connectionAttempts = new HashMap<String, Integer[]>();
 	
@@ -136,6 +144,9 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 			if(attempt == null || getTime() - attempt[0] > 10) {
 				myEnvironment.act(new ConnectionRequestMessage(target, getId(), null, environmentAuthCode.toString(), getTime(), new Random().nextInt(), this), myId, environmentAuthCode);
 			}
+		} else if(this.getState() == State.STATIC) {
+			// proximity connection
+			proxies.add(target);
 		}
 	}
 
@@ -146,6 +157,16 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Override
 	public void setSlaves(List<String> slaves) {
 		this.slaves = slaves;
+	}
+
+	@Override
+	public State getState() {
+		return this.state;
+	}
+
+	@Override
+	public void setState(State s) {
+		this.state = s;
 	}
 
 }

@@ -29,7 +29,7 @@ public class StructuresXmlWrite {
 		
 		presageConfig.setComment("Simulated complex emergent structures");
 		presageConfig.setIterations(5000);
-		presageConfig.setRandomSeed(5);
+		presageConfig.setRandomSeed(7000);
 		presageConfig.setThreadDelay(50);
 		presageConfig.setAutorun(false);
 		
@@ -61,45 +61,26 @@ public class StructuresXmlWrite {
 		TreeMap<String, SeedAgent> seeds = new TreeMap<String, SeedAgent>();
 		
 		Random r = new Random();
-		double achance = 2;
-		double bchance = 0;
-		double cchance = 0;
 		ArrayList<String>[] seedTokens = new ArrayList[seedcount];
 		for(int ind=0; ind<seedcount; ind++) {
 			seedTokens[ind] = new ArrayList<String>();
-			if(r.nextDouble() < achance) {
-				seedTokens[ind].add("a");
-			} else {
-				achance = achance + (1-achance)/(seedcount-1);
-			}
-			if(r.nextDouble() < bchance) {
-				seedTokens[ind].add("b");	
-			} else {
-				bchance = bchance + (1-bchance)/(seedcount-1);
-			}
-			if(r.nextDouble() < cchance) {
-				seedTokens[ind].add("c");
-			} else {
-				cchance = cchance + (1-cchance)/(seedcount-1);
-			}
 		}
+		seedTokens[0].add("a");
+		seedTokens[1].add("b");
 		
 		for(int i=0; i<seedcount; i++) {
-			Location l = new Location(rand.nextInt(simSize), rand.nextInt(simSize));
+			Location l = new Location((100+200*i)%simSize, (200)%simSize);
 			seeds.put("seed"+i, new SeedAgent(seedRoles, "seed"+i, UUID.randomUUID(), l, communicationRange, seedTokens[i]));
 			ms.addEvent(new ScriptedEvent ( 0 , UUID.randomUUID().toString(), new presage.events.CoreEvents.ActivateParticipant("seed"+i)));
 		}
 		parts.putAll(seeds);
 		
 		// cells
-		int cellcount = 20;
+		int cellcount = 150;
 		ArrayList<String> cellRoles = new ArrayList<String>();
 		cellRoles.add("cell");
 		TreeMap<String, CellAgent> cells = new TreeMap<String, CellAgent>();
 
-		achance = 0.7;
-		bchance = 0.2;
-		cchance = 0.5;
 		ArrayList<String>[] cellTokens = new ArrayList[cellcount];
 		for(int ind=0; ind<cellcount; ind++) {
 			cellTokens[ind] = new ArrayList<String>();

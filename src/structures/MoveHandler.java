@@ -4,6 +4,7 @@ import presage.Input;
 import presage.abstractparticipant.APlayerDataModel;
 import presage.abstractparticipant.Interpreter;
 import presage.abstractparticipant.plan.Plan;
+import structures.CellPlayerModel.State;
 
 public class MoveHandler extends Plan {
 
@@ -29,6 +30,9 @@ public class MoveHandler extends Plan {
 	@Override
 	public void handle(Input input) {
 		PositionInput pos = (PositionInput) input;
+		if(dm.getLocation().equals(pos.getPosition())) {
+			dm.setState(State.STATIC);
+		}
 		dm.setLocation(pos.getPosition());
 	}
 

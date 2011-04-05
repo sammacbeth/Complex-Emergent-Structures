@@ -2,16 +2,28 @@ package structures;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import presage.Plugin;
 import presage.Simulation;
 
 public class StructuresViewer extends JPanel implements Plugin {
+
+	private static final boolean doImages = false;
+
+	private static final String imageFolder = "/home/sm1106/Pictures/1/";
 
 	Simulation sim;
 	
@@ -20,7 +32,11 @@ public class StructuresViewer extends JPanel implements Plugin {
 	Color seedColor = Color.RED;
 	Color cellColor = Color.BLACK;
 	
+	JButton tokenButton = new JButton("Toggle Tokens");
+	
 	int cycle = 0;
+	
+	boolean showTokens = false;
 	
 	int agentSize = 10;
 	
@@ -71,6 +87,11 @@ public class StructuresViewer extends JPanel implements Plugin {
 			for(String connected : player.getSlaves()) {
 				connections.add(new Tuple<Location>(player.getLocation(), getLocation(connected)));
 			}
+			for(String proxy : player.proxies) {
+				if(Location.distanceBetween(player.getLocation(), getLocation(proxy)) <= 20) {
+					connections.add(new Tuple<Location>(player.getLocation(), getLocation(proxy)));
+				}
+			}
 		}
 		for(Tuple<Location> link : connections) {
 			try {
@@ -93,13 +114,25 @@ public class StructuresViewer extends JPanel implements Plugin {
 		g.setColor(c);
 		g.fillOval(l.getX() - agentSize/2, l.getY() - agentSize/2, agentSize, agentSize);
 		//g.drawString(name, (l.getX() - 1), (l.getY() - 1));
-		//g.drawString(name +":"+tokens.toString(), (l.getX() + 4), (l.getY() - 6));
+		if(showTokens) {
+			g.drawString(tokens.toString(), (l.getX() + 4), (l.getY() - 6));
+		}
 	}
 	
 	@Override
 	public void execute() {
 		dmodel = (StructuresEnvDataModel) sim.getEnvDataModel();
 		repaint();
+		if(doImages) {
+			BufferedImage image = new BufferedImage(dmodel.width, dmodel.height, BufferedImage.TYPE_INT_RGB);
+			paint(image.getGraphics());
+			try {
+				File f = new File(imageFolder+cycle+".png");
+				ImageIO.write(image, "PNG", f);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
 		cycle++;
 	}
 
@@ -108,6 +141,19 @@ public class StructuresViewer extends JPanel implements Plugin {
 		this.sim = sim; 
 		
 		setBackground(Color.GRAY);
+		
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
+		this.add(this.tokenButton);
+		
+		this.tokenButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				showTokens = !showTokens;
+				repaint();
+			}
+		});
 		
 		dmodel = (StructuresEnvDataModel)sim.getEnvDataModel();
 		

@@ -13,6 +13,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 
 import presage.abstractparticipant.APlayerDataModel;
+import structures.CellPlayerModel.State;
 
 public class SeedPlayerModel extends APlayerDataModel implements HasCommunicationRange, HasConnections, HasTokens, Connectable {
 
@@ -136,6 +137,16 @@ public class SeedPlayerModel extends APlayerDataModel implements HasCommunicatio
 	@Override
 	public void setSlaves(List<String> slaves) {
 		this.slaves = slaves;
+	}
+
+	@Override
+	public State getState() {
+		return State.STATIC;
+	}
+
+	@Override
+	public void setState(State s) {
+		
 	}
 	
 }

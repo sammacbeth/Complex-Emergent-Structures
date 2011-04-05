@@ -33,5 +33,9 @@ public class Force {
 	public Move toMove() {
 		return new Move(participantId, (int) Math.rint(x), (int) Math.rint(y));
 	}
+
+	public double getMagnitude() {
+		return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+	}
 	
 }

@@ -1,6 +1,8 @@
 package structures;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -22,6 +24,7 @@ import presage.environment.AbstractEnvironment;
 import presage.environment.messages.ENVDeRegisterRequest;
 import presage.environment.messages.ENVRegisterRequest;
 import presage.environment.messages.ENVRegistrationResponse;
+import structures.CellPlayerModel.State;
 
 public class StructuresEnvironment extends AbstractEnvironment {
 
@@ -68,23 +71,30 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			Location targetLoc = ((HasCommunicationRange) dmodel.players.get(f.getTarget())).getLocation();
 			// if locations are equal move f out of the way randomly
 			if(fLoc.equals(targetLoc)) {
-				fLoc = Location.add(fLoc, new Location(random.nextInt(10)-10, random.nextInt(10)-10));
+				//fLoc = Location.add(fLoc, new Location(random.nextInt(10)-10, random.nextInt(10)-10));
+			} else if(Location.distanceBetween(fLoc, targetLoc) <= 15) {
+				continue;
 			} else {
+				
 				double angle = Location.minus(targetLoc, fLoc).getAngle();
-				Location offset = Location.fromPolar(-15, angle);
+				Force attract = Force.fromPolar(2, angle);
+				attract.participantId = f.participantId;
+				forces.add(attract);
+				/*Location offset = Location.fromPolar(-15, angle);
 				Location t = Location.add(targetLoc, offset);
 				Move m = Move.generateMove(f.getParticipantId(), fLoc, t, 2);
 				if(m != null) {
 					logger.debug("Calculating follow move: "+f.getParticipantId()+"->"+f.getTarget()+" ang="+ angle +" offset="+offset+" targetloc="+t+" move="+m);
 					//act(m, f.getParticipantId(), dmodel.cellModels.get(f.getParticipantId()).environmentAuthCode);
 					forces.add(Force.fromMove(m));
-				}
+				}*/
 			}
 			//forces.add(Force.fromMove(Move.generateMove(f.getParticipantId(), fLoc, targetLoc, 2)));
 		}
 		
 		for(Force m : forces) {
-			Location l = dmodel.cellModels.get(m.getParticipantId()).getLocation();
+			CellPlayerModel cpm = dmodel.cellModels.get(m.getParticipantId());
+			Location l = cpm.getLocation();
 			for(String cell : dmodel.cellModels.keySet()) {
 				if(cell == m.getParticipantId()) {
 					continue;
@@ -94,7 +104,9 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			for(String seed : dmodel.seedModels.keySet()) {
 				m.add(getForceOn(l, dmodel.seedModels.get(seed).getLocation()));
 			}
-			processMove(m.toMove());
+			if(cpm.getState() == State.MOBILE || m.getMagnitude() >= 1.8) {
+				processMove(m.toMove());
+			}
 		}
 		
 		forces = new LinkedList<Force>();
@@ -108,7 +120,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	 * @return
 	 */
 	private Force getForceOn(Location a, Location b) {
-		final int maxforce = 6;
+		final int maxforce = 4;
 		final int repulsionDistance = 15;
 		int distance = Location.distanceBetween(a, b);
 		double mag;
@@ -230,27 +242,44 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			}*/
 		}
 		// iterate cells and propagate tokens to their connected
-		for(String cell : dmodel.cellModels.keySet()) {
-			CellPlayerModel cpm = dmodel.cellModels.get(cell);
-			Set<String> myTokens = cellTokens.getTokens(cell);
-			List<String> myTokensList = new ArrayList<String>(myTokens);
-			// master
-			if(cpm.getMaster() != null) {
-				cellTokens.addTokens(cpm.getMaster(), myTokensList);
-				myTokens.addAll(cellTokens.getTokens(cpm.getMaster()));
-				myTokensList = new ArrayList<String>(myTokens);
-				connections.addToken(cpm.getMaster(), cell);
+		
+		List<Iterable<String>> cellIterators = new ArrayList<Iterable<String>>(2);
+		cellIterators.add(dmodel.cellModels.keySet());
+		List<String> reverseList = new LinkedList<String>(dmodel.cellModels.keySet());
+		Collections.reverse(reverseList);
+		cellIterators.add(reverseList);
+		cellIterators.add(dmodel.cellModels.keySet());
+		
+		for(Iterable<String> i : cellIterators) {
+			for(String cell : i) {
+				CellPlayerModel cpm = dmodel.cellModels.get(cell);
+				Set<String> myTokens = cellTokens.getTokens(cell);
+				List<String> myTokensList = new ArrayList<String>(myTokens);
+				// master
+				if(cpm.getMaster() != null) {
+					cellTokens.addTokens(cpm.getMaster(), myTokensList);
+					myTokens.addAll(cellTokens.getTokens(cpm.getMaster()));
+					myTokensList = new ArrayList<String>(myTokens);
+					connections.addToken(cpm.getMaster(), cell);
+				}
+				// slaves
+				for(String slave : cpm.getSlaves()) {
+					cellTokens.addTokens(slave, myTokensList);
+					myTokens.addAll(cellTokens.getTokens(slave));
+					myTokensList = new ArrayList<String>(myTokens);
+				}
+				for(String proxy : cpm.proxies) {
+					if(Location.distanceBetween(cpm.getLocation(), ((HasLocation) dmodel.players.get(proxy)).getLocation()) <= 20) {
+						cellTokens.addTokens(proxy, myTokensList);
+						myTokens.addAll(cellTokens.getTokens(proxy));
+						myTokensList = new ArrayList<String>(myTokens);
+					}
+				}
+				// weak connections
+				/*for(String conns : cpm.getConnections()) {
+					cellTokens.addTokens(conns, myTokensList);
+				}*/
 			}
-			// slaves
-			for(String slave : cpm.getSlaves()) {
-				cellTokens.addTokens(slave, myTokensList);
-				myTokens.addAll(cellTokens.getTokens(slave));
-				myTokensList = new ArrayList<String>(myTokens);
-			}
-			// weak connections
-			/*for(String conns : cpm.getConnections()) {
-				cellTokens.addTokens(conns, myTokensList);
-			}*/
 		}
 		// notify players of their connections + position
 		for(String player : dmodel.cellModels.keySet()) {

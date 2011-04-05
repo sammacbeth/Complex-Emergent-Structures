@@ -1,5 +1,6 @@
 <pluginManager>
    <plugins class="java.util.ArrayList">
       <plugin class="structures.StructuresViewer"/>
+      <plugin class="structures.LatticePlugin"/>
    </plugins>
 </pluginManager>

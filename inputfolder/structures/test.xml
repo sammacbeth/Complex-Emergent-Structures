@@ -2,7 +2,7 @@
    <comment>Simulated complex emergent structures</comment>
    <outputfolder>tempoutput/</outputfolder>
    <iterations>5000</iterations>
-   <randomseed>5</randomseed>
+   <randomseed>7000</randomseed>
    <threaddelay>50</threaddelay>
    <autorun>false</autorun>
    <participantsconfigpath>inputfolder/structures/participants.xml</participantsconfigpath>
