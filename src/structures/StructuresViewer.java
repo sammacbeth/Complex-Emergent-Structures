@@ -21,9 +21,9 @@ import presage.Simulation;
 
 public class StructuresViewer extends JPanel implements Plugin {
 
-	private static final boolean doImages = false;
+	private static final boolean doImages = true;
 
-	private static final String imageFolder = "/home/sm1106/Pictures/1/";
+	private static final String imageFolder = "/home/sm1106/Pictures/Env/";
 
 	Simulation sim;
 	
@@ -57,6 +57,10 @@ public class StructuresViewer extends JPanel implements Plugin {
 				return (param1.equals(t.param1) && param2.equals(t.param2)) || (param1.equals(t.param2) && param2.equals(t.param1));
 			}
 		}
+		
+		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		
+		this.add(this.tokenButton);
 		
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -128,7 +132,7 @@ public class StructuresViewer extends JPanel implements Plugin {
 		dmodel = (StructuresEnvDataModel) sim.getEnvDataModel();
 		repaint();
 		if(doImages) {
-			BufferedImage image = new BufferedImage(dmodel.width, dmodel.height, BufferedImage.TYPE_INT_RGB);
+			BufferedImage image = new BufferedImage(dmodel.width*sizeMod, dmodel.height*sizeMod, BufferedImage.TYPE_INT_RGB);
 			paint(image.getGraphics());
 			try {
 				File f = new File(imageFolder+cycle+".png");

@@ -1,13 +1,17 @@
 package structures;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.ElementMap;
 
 import presage.Participant;
 import presage.abstractparticipant.APlayerDataModel;
 import presage.environment.AEnvDataModel;
+import structures.tree.Tree;
 
 public class StructuresEnvDataModel extends AEnvDataModel {
 
@@ -26,6 +30,9 @@ public class StructuresEnvDataModel extends AEnvDataModel {
 	
 	@ElementMap
 	public TreeMap<String, CellPlayerModel> cellModels = new TreeMap<String, CellPlayerModel>();
+
+	@ElementList
+	public List<Tree> trees = new ArrayList<Tree>();
 	
 	public StructuresEnvDataModel() {
 		super();

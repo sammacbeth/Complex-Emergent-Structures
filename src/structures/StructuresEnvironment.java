@@ -235,7 +235,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		CellTokenMap cellTokens = new CellTokenMap();
 		CellTokenMap connections = new CellTokenMap(); // this data structure works for connections too!
 		
-		List<Tree> trees = new ArrayList<Tree>();
+		dmodel.trees = new ArrayList<Tree>();
 		/*
 		 *  find tree heads
 		 */
@@ -244,11 +244,11 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		for(String seed : dmodel.seedModels.keySet()) {
 			SeedPlayerModel spm = dmodel.seedModels.get(seed);
 			Node head = new Node(0, seed, null, seed);
-			trees.add(generateTree(head));
+			dmodel.trees.add(generateTree(head));
 		}
 		
 		for(String cell : dmodel.cellModels.keySet()) {
-			for(Tree t : trees) {
+			for(Tree t : dmodel.trees) {
 				if(t.nodes.containsKey(cell)) {
 					cellTokens.addTokens(cell, dmodel.seedModels.get(t.treeHead.getName()).getTokens());
 				}

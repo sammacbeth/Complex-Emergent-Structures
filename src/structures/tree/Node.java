@@ -1,14 +1,27 @@
 package structures.tree;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Node {
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 
+public class Node implements Serializable {
+
+	@Element
 	int level;
+	
+	@Element
 	String headNode;
+	
+	@Element
 	Node parent;
+	
+	@ElementList
 	Set<Node> children;
+	
+	@Element
 	String name;
 	
 	public Node(int level, String headNode, Node parent, String name) {
@@ -65,16 +78,6 @@ public class Node {
 	
 	public boolean equals(String s) {
 		return this.name.equals(s);
-	}
-
-	@Override
-	public int hashCode() {
-		return this.name.hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return "["+this.name+", "+this.level+"]";
 	}
 	
 }

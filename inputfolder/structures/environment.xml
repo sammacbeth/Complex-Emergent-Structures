@@ -10,5 +10,6 @@
       <players/>
       <seedModels/>
       <cellModels/>
+      <trees class="java.util.ArrayList"/>
    </dmodel>
 </structuresEnvironment>
