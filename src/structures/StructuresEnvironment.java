@@ -77,22 +77,15 @@ public class StructuresEnvironment extends AbstractEnvironment {
 				//fLoc = Location.add(fLoc, new Location(random.nextInt(10)-10, random.nextInt(10)-10));
 			} else if(Location.distanceBetween(fLoc, targetLoc) <= 15) {
 				continue;
+			} else if (Location.distanceBetween(fLoc, targetLoc) > 40) {
+				// forced disconnect
+				dmodel.cellModels.get(f.getParticipantId()).setMaster(null);
 			} else {
-				
 				double angle = Location.minus(targetLoc, fLoc).getAngle();
 				Force attract = Force.fromPolar(2, angle);
 				attract.participantId = f.participantId;
 				forces.add(attract);
-				/*Location offset = Location.fromPolar(-15, angle);
-				Location t = Location.add(targetLoc, offset);
-				Move m = Move.generateMove(f.getParticipantId(), fLoc, t, 2);
-				if(m != null) {
-					logger.debug("Calculating follow move: "+f.getParticipantId()+"->"+f.getTarget()+" ang="+ angle +" offset="+offset+" targetloc="+t+" move="+m);
-					//act(m, f.getParticipantId(), dmodel.cellModels.get(f.getParticipantId()).environmentAuthCode);
-					forces.add(Force.fromMove(m));
-				}*/
 			}
-			//forces.add(Force.fromMove(Move.generateMove(f.getParticipantId(), fLoc, targetLoc, 2)));
 		}
 		
 		for(Force m : forces) {
@@ -107,7 +100,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			for(String seed : dmodel.seedModels.keySet()) {
 				m.add(getForceOn(l, dmodel.seedModels.get(seed).getLocation()));
 			}
-			if(cpm.getState() == State.MOBILE || m.getMagnitude() >= 1.8) {
+			if(cpm.getState() == State.MOBILE || m.getMagnitude() >= 1.0) {
 				processMove(m.toMove());
 			}
 		}
@@ -123,7 +116,7 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	 * @return
 	 */
 	private Force getForceOn(Location a, Location b) {
-		final int maxforce = 4;
+		final int maxforce = 6;
 		final int repulsionDistance = 15;
 		int distance = Location.distanceBetween(a, b);
 		double mag;
@@ -258,10 +251,15 @@ public class StructuresEnvironment extends AbstractEnvironment {
 			}
 		}
 		
-		// notify players of their connections + position
+		// notify cells of their connections + position
 		for(String player : dmodel.cellModels.keySet()) {
 			sim.players.get(player).enqueueInput(new TokensInput(dmodel.getTime(), new ArrayList<String>(cellTokens.getTokens(player)), connections.getTokens(player)));
 			sim.players.get(player).enqueueInput(new PositionInput(dmodel.cellModels.get(player).position, dmodel.getTime()));
+		}
+		
+		// notify seeds of their connections
+		for(String seed : dmodel.seedModels.keySet()) {
+			sim.players.get(seed).enqueueInput(new TokensInput(dmodel.getTime(), new ArrayList<String>(dmodel.seedModels.get(seed).getTokens()), connections.getTokens(seed)));
 		}
 	}
 	
@@ -299,11 +297,13 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		}
 		// find proxy connections in the tree
 		for(String proxy : nodeCons.getProxyConnections()) {
-			Node n = node.createChild(proxy);
-			if(!t.nodes.containsKey(n.getName())) {
-				node.addChild(n);
-				t.nodes.put(n.getName(), n);
-				nextlevel.add(n);
+			if(Location.distanceBetween(((HasLocation)dmodel.players.get(node.getName())).getLocation(), ((HasLocation)dmodel.players.get(proxy)).getLocation()) <= 20) {
+				Node n = node.createChild(proxy);
+				if(!t.nodes.containsKey(n.getName())) {
+					node.addChild(n);
+					t.nodes.put(n.getName(), n);
+					nextlevel.add(n);
+				}
 			}
 		}
 		// master connection

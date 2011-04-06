@@ -56,6 +56,10 @@ public class CellAgent extends AbstractAgent {
 		
 		checkSeedNeighbourhood();
 		
+		// random disconnections
+		if(dm.getMaster() != null && rand.nextDouble() < dm.disconnectionProb()) {
+			dm.setMaster(null);
+		}
 		if(dm.getMaster() != null) {
 			// follow mode
 			dm.myEnvironment.act(new Follow(getId(), dm.getMaster()), getId(), dm.environmentAuthCode);

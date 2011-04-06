@@ -32,6 +32,7 @@ public class SeedAgent extends AbstractAgent {
 		// any other initialisation you want to do.
 		interpreter.addPlan(new AnswerRequestPlan(getPlayerDataModel(), interpreter, getId(), "requesttoken"));
 		interpreter.addPlan(new ConnectionPlan(getPlayerDataModel(), interpreter, getId()));
+		interpreter.addPlan(new TokensHandler(getPlayerDataModel(), interpreter, getId()));
 	}
 
 	@Override

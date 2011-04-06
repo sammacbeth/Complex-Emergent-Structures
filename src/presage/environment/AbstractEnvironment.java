@@ -98,15 +98,27 @@ public abstract class AbstractEnvironment implements Environment {
 
 
 		System.out.println("***** AbstractEnvironment updating Physical World *****");
-		updatePhysicalWorld(); 
-
+		Thread t = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				updatePhysicalWorld();
+			}
+		});
+		t.start();
 
 		System.out.println("***** AbstractEnvironment updating Network *****");
 		updateNetwork();
 
 		System.out.println("***** AbstractEnvironment updating Participants Perceptions *****");
 		updatePerceptions();
-
+		
+		try {
+			t.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	protected void executeQueuedActions(){

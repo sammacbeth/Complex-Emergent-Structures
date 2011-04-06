@@ -22,7 +22,7 @@ public class StructuresXmlWrite {
 	 */
 	public static void main(String[] args) {
 		
-		int simSize = 200;
+		int simSize = 400;
 		int communicationRange = 20;
 
 		PresageConfig presageConfig = new PresageConfig();
@@ -55,7 +55,7 @@ public class StructuresXmlWrite {
 		TreeMap<String, Participant> parts = new TreeMap<String, Participant>();
 		
 		// seeds
-		int seedcount = 2;
+		int seedcount = 3;
 		ArrayList<String> seedRoles = new ArrayList<String>();
 		seedRoles.add("seed");
 		TreeMap<String, SeedAgent> seeds = new TreeMap<String, SeedAgent>();
@@ -67,16 +67,17 @@ public class StructuresXmlWrite {
 		}
 		seedTokens[0].add("a");
 		seedTokens[1].add("b");
+		seedTokens[2].add("c");
 		
 		for(int i=0; i<seedcount; i++) {
-			Location l = new Location((50+100*i)%simSize, (100)%simSize);
+			Location l = new Location((100+100*i)%simSize, (100+200*i)%simSize);
 			seeds.put("seed"+i, new SeedAgent(seedRoles, "seed"+i, UUID.randomUUID(), l, communicationRange, seedTokens[i]));
 			ms.addEvent(new ScriptedEvent ( 0 , UUID.randomUUID().toString(), new presage.events.CoreEvents.ActivateParticipant("seed"+i)));
 		}
 		parts.putAll(seeds);
 		
 		// cells
-		int cellcount = 50;
+		int cellcount = 200;
 		ArrayList<String> cellRoles = new ArrayList<String>();
 		cellRoles.add("cell");
 		TreeMap<String, CellAgent> cells = new TreeMap<String, CellAgent>();

@@ -57,6 +57,12 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	
 	public final Map<String, Integer[]> connectionAttempts = new HashMap<String, Integer[]>();
 	
+	public Random rand = new Random();
+	
+	public double connectionProb = 1;
+	
+	public double disconnectionProb = 0;
+	
 	public CellPlayerModel() {
 		this.myId = participantID;
 	}
@@ -139,7 +145,7 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 
 	@Override
 	public void connectTo(String target) {
-		if(this.getMaster() == null) {
+		if(this.getMaster() == null && rand.nextDouble() < connectionProb()) {
 			Integer[] attempt = getConnectionAttempts().get(target);
 			if(attempt == null || getTime() - attempt[0] > 10) {
 				myEnvironment.act(new ConnectionRequestMessage(target, getId(), null, environmentAuthCode.toString(), getTime(), new Random().nextInt(), this), myId, environmentAuthCode);
@@ -151,7 +157,11 @@ public class CellPlayerModel extends APlayerDataModel implements HasCommunicatio
 	}
 
 	public double connectionProb() {
-		return 0.5;
+		return this.connectionProb;
+	}
+	
+	public double disconnectionProb() {
+		return this.disconnectionProb;
 	}
 
 	@Override

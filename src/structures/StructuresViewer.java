@@ -18,10 +18,12 @@ import javax.swing.JPanel;
 
 import presage.Plugin;
 import presage.Simulation;
+import structures.tree.Node;
+import structures.tree.Tree;
 
 public class StructuresViewer extends JPanel implements Plugin {
 
-	private static final boolean doImages = true;
+	private static final boolean doImages = false;
 
 	private static final String imageFolder = "/home/sm1106/Pictures/Env/";
 
@@ -39,7 +41,7 @@ public class StructuresViewer extends JPanel implements Plugin {
 	
 	boolean showTokens = false;
 	
-	private static final int sizeMod = 3;
+	private static final int sizeMod = 2;
 	
 	int agentSize = 10*sizeMod;
 	
@@ -82,9 +84,25 @@ public class StructuresViewer extends JPanel implements Plugin {
 			drawAgent(g, player.getLocation(), cellColor, player.getId(), player.getTokens());
 		}
 		
-		g.setColor(Color.BLACK);
 		
+		Set<Tuple<Location>> bridgeConnections = new HashSet<Tuple<Location>>();
+		for(Tree t : dmodel.trees) {
+			for(String seed : dmodel.seedModels.keySet()) {
+				if(t.treeHead.getName().equals(seed))
+					continue;
+				else if(t.nodes.containsKey(seed)) {
+					Node n = t.nodes.get(seed);
+					Node parent = n.getParent();
+					while(parent != null) {
+						bridgeConnections.add(new Tuple<Location>(getLocation(n.getName()), getLocation(parent.getName())));
+						n = parent;
+						parent = n.getParent();
+					}
+				}
+			}
+		}
 		Set<Tuple<Location>> connections = new HashSet<Tuple<Location>>();
+		
 		CellPlayerModel player;
 		for(String playerID : dmodel.cellModels.keySet()) {
 			player = dmodel.cellModels.get(playerID);
@@ -100,7 +118,17 @@ public class StructuresViewer extends JPanel implements Plugin {
 				}
 			}
 		}
+		connections.removeAll(bridgeConnections);
+		g.setColor(Color.BLACK);
 		for(Tuple<Location> link : connections) {
+			try {
+				Location loc1 = link.param1;
+				Location loc2 = link.param2;
+				g.drawLine(loc1.getX()*sizeMod, loc1.getY()*sizeMod, loc2.getX()*sizeMod, loc2.getY()*sizeMod);
+			} catch (NullPointerException e) {}
+		}
+		g.setColor(Color.RED);
+		for(Tuple<Location> link : bridgeConnections) {
 			try {
 				Location loc1 = link.param1;
 				Location loc2 = link.param2;
