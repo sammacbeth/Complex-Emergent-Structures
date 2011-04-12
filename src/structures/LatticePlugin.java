@@ -33,7 +33,7 @@ public class LatticePlugin extends JPanel implements Plugin {
 	
 	JButton treeButton = new JButton("Generate Tree");
 	
-	private static final String Folder = "/home/sm1106/Pictures/Trees/";
+	private static final String Folder = "/home/sm1106/Dropbox/Photos/Structures/";
 	
 	int cycle = 0;
 	
@@ -57,11 +57,6 @@ public class LatticePlugin extends JPanel implements Plugin {
 		}
 	}
 	
-	private void drawNode(Graphics g, Color c, int x, int y, String name) {
-		g.setColor(c);
-		g.drawOval(x, y, 50, 50);
-		g.drawString(name, x+5, y+25);
-	}
 	
 	@Override
 	public void execute() {
@@ -93,12 +88,24 @@ public class LatticePlugin extends JPanel implements Plugin {
 		
 		dmodel = (StructuresEnvDataModel)sim.getEnvDataModel();
 		
+		try {
+			File f = new File(Folder+dmodel.simID);
+			f.mkdir();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		repaint();
 	}
 	
 	private void writeDotFile() {
 		try {
-			File f = new File(Folder+cycle+".dot");
+			File f;
+			if(sim instanceof StructuresSimulation) {
+				f = new File(Folder+dmodel.simID+"/FinalTree.dot");
+			} else {
+				f = new File(Folder+cycle+".dot");
+			}
 			BufferedWriter w = new BufferedWriter(new FileWriter(f));
 			w.write("digraph celltrees {");
 			w.newLine();
@@ -146,8 +153,7 @@ public class LatticePlugin extends JPanel implements Plugin {
 
 	@Override
 	public void onSimulationComplete() {
-		// TODO Auto-generated method stub
-
+		writeDotFile();
 	}
 
 	@Override

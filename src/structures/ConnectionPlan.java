@@ -40,7 +40,7 @@ public class ConnectionPlan extends Plan {
 			final ConnectionRequestMessage request = (ConnectionRequestMessage) input;
 			
 			// ensure they're not already a slave or our master
-			if(c.getSlaves().contains(request.getFrom()) && c.getMaster() != request.getFrom()) {
+			if(c.getSlaves().contains(request.getFrom()) || c.getMaster() == request.getFrom()) {
 				// reject
 				rejectRequest(request);
 			} else if(c.getConnectionAttempts().containsKey(request.getFrom())) {

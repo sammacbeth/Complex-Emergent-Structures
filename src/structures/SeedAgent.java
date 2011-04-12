@@ -46,7 +46,7 @@ public class SeedAgent extends AbstractAgent {
 		
 		// every seed will check if there is a cell within a range of 10
 		
-		checkSeedNeighbourhood();	
+		//checkSeedNeighbourhood();	
 		//attachCellToSeed(i,y);
 		
 		

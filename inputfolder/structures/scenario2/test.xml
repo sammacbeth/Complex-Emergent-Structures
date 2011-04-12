@@ -1,0 +1,13 @@
+<presageConfig>
+   <comment>Simulated complex emergent structures</comment>
+   <outputfolder>tempoutput/</outputfolder>
+   <iterations>2000</iterations>
+   <randomseed>7000</randomseed>
+   <threaddelay>50</threaddelay>
+   <autorun>false</autorun>
+   <participantsconfigpath>inputfolder/structures/scenario2/participants.xml</participantsconfigpath>
+   <pluginsconfigpath>inputfolder/structures/scenario2/plugins.xml</pluginsconfigpath>
+   <eventscriptconfigpath>inputfolder/structures/scenario2/methods.xml</eventscriptconfigpath>
+   <environmentclass>structures.StructuresEnvironment</environmentclass>
+   <environmentconfigpath>inputfolder/structures/scenario2/environment.xml</environmentconfigpath>
+</presageConfig>

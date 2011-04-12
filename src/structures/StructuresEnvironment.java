@@ -116,15 +116,17 @@ public class StructuresEnvironment extends AbstractEnvironment {
 	 * @return
 	 */
 	private Force getForceOn(Location a, Location b) {
-		final int maxforce = 6;
+		final int maxforce = 10;
 		final int repulsionDistance = 15;
 		int distance = Location.distanceBetween(a, b);
 		double mag;
 		if(distance < 10) {
-			mag = maxforce;
+			mag = maxforce - distance*((maxforce-2)/10);
 			//mag = -(maxforce/(repulsionDistance*repulsionDistance)) * distance*distance + maxforce;
 		} else if(distance < 15) {
 			mag = 2;
+		} else if(distance < 20) {
+			mag = 2 - 0.4*(distance-15);
 		} else {
 		
 			mag = 0;
@@ -344,6 +346,8 @@ public class StructuresEnvironment extends AbstractEnvironment {
 		if(sro.dm instanceof CellPlayerModel) {
 			this.dmodel.cellModels.put(sro.getParticipantID(), (CellPlayerModel) sro.dm);
 			this.dmodel.players.put(sro.getParticipantID(), sro.dm);
+			((CellPlayerModel) sro.dm).connectionProb = dmodel.connectionProb;
+			((CellPlayerModel) sro.dm).disconnectionProb = dmodel.dissconnectionProb;
 			return new ENVRegistrationResponse(sro.getParticipantID(), UUID.randomUUID()) {
 			};
 		} else if(sro.dm instanceof SeedPlayerModel) {

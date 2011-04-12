@@ -25,7 +25,7 @@ public class StructuresViewer extends JPanel implements Plugin {
 
 	private static final boolean doImages = false;
 
-	private static final String imageFolder = "/home/sm1106/Pictures/Env/";
+	private static final String imageFolder = "/home/sm1106/Dropbox/Photos/Structures/";
 
 	Simulation sim;
 	
@@ -168,6 +168,15 @@ public class StructuresViewer extends JPanel implements Plugin {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
+		} else if((cycle % 50) == 1) {
+			BufferedImage image = new BufferedImage(dmodel.width*sizeMod, dmodel.height*sizeMod, BufferedImage.TYPE_INT_RGB);
+			paint(image.getGraphics());
+			try {
+				File f = new File(imageFolder+dmodel.simID+"/Env_"+cycle+".png");
+				ImageIO.write(image, "PNG", f);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 		cycle++;
 	}
@@ -193,6 +202,13 @@ public class StructuresViewer extends JPanel implements Plugin {
 		
 		dmodel = (StructuresEnvDataModel)sim.getEnvDataModel();
 		
+		try {
+			File f = new File(imageFolder+dmodel.simID);
+			f.mkdir();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 		repaint();
 	}
 
@@ -204,8 +220,14 @@ public class StructuresViewer extends JPanel implements Plugin {
 
 	@Override
 	public void onSimulationComplete() {
-		// TODO Auto-generated method stub
-
+			BufferedImage image = new BufferedImage(dmodel.width*sizeMod, dmodel.height*sizeMod, BufferedImage.TYPE_INT_RGB);
+			paint(image.getGraphics());
+			try {
+				File f = new File(imageFolder+dmodel.simID+"/Env_final.png");
+				ImageIO.write(image, "PNG", f);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 	}
 
 	@Override

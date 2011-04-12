@@ -1,0 +1,13 @@
+<pluginManager>
+   <plugins class="java.util.ArrayList">
+      <plugin class="structures.StructuresViewer"/>
+      <plugin class="structures.LatticePlugin"/>
+      <plugin class="structures.DBPlugin">
+         <JDBCDriver>com.mysql.jdbc.Driver</JDBCDriver>
+         <connectionUrl>jdbc:mysql://localhost/structures</connectionUrl>
+         <username>presage</username>
+         <password>C5xd9feYcJbw3hy9</password>
+         <scenario>scenario2</scenario>
+      </plugin>
+   </plugins>
+</pluginManager>

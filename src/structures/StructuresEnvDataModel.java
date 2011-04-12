@@ -15,6 +15,11 @@ import structures.tree.Tree;
 
 public class StructuresEnvDataModel extends AEnvDataModel {
 
+	public int simID;
+	public int paramSetID;
+	public double connectionProb = 1.0;
+	public double dissconnectionProb = 0.0;
+
 	@Element
 	public int width;
 	

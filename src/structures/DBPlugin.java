@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.simpleframework.xml.Element;
+
 import presage.Plugin;
 import presage.Simulation;
 import structures.tree.Node;
@@ -21,11 +23,16 @@ public class DBPlugin implements Plugin {
 	
 	Connection conn = null;
 	
+	@Element
 	String JDBCDriver;
+	@Element
 	String connectionUrl;
+	@Element
 	String username;
+	@Element
 	String password;
 	
+	@Element
 	String scenario;
 	int paramSet;
 	
@@ -33,11 +40,14 @@ public class DBPlugin implements Plugin {
 	
 	int cycle = 0;
 	
-	public DBPlugin(String scenario, int paramSet, String jDBCDriver, String connectionUrl, String username,
+	public DBPlugin() {
+		super();
+	}
+	
+	public DBPlugin(String scenario, String jDBCDriver, String connectionUrl, String username,
 			String password) {
 		super();
 		this.scenario = scenario;
-		this.paramSet = paramSet;
 		JDBCDriver = jDBCDriver;
 		this.connectionUrl = connectionUrl;
 		this.username = username;
@@ -60,6 +70,22 @@ public class DBPlugin implements Plugin {
 			}
 		}
 		
+		dmodel = (StructuresEnvDataModel) sim.getEnvDataModel();
+		Set<String> bridgeTypes = new HashSet<String>();
+		int i =0;
+		for(String seed : dmodel.seedModels.keySet()) {
+			int j = 0;
+			for(String seed2 : dmodel.seedModels.keySet()) {
+				if(i >= j) {
+					j++;
+					continue;
+				} else {
+					bridgeTypes.add(seed+"-"+seed2);
+					j++;
+				}
+			}
+			i++;
+		}
 		// check for bridges
 		Set<Tuple<String>> bridges = new HashSet<Tuple<String>>();
 		for(Tree t : dmodel.trees) {
@@ -68,11 +94,11 @@ public class DBPlugin implements Plugin {
 					continue;
 				else if(t.nodes.containsKey(seed)) {
 					Tuple<String> tup = new Tuple<String>(t.treeHead.getName(), seed);
-					if(!bridges.contains(tup)) {
+					if(!bridges.contains(tup) && bridgeTypes.contains(tup.param1 +"-"+tup.param2)) {
 						bridges.add(tup);
 						try {
 							Statement st = conn.createStatement();
-							st.execute("INSERT INTO bridges (simID, cycle, between, length) VALUES ("+simID+", "+cycle+", '"+tup.param1+"-"+tup.param2+"', "+t.nodes.get(seed).getLevel()+")");
+							st.execute("INSERT INTO bridges (simID, cycle, `between`, `length`) VALUES ("+simID+", "+cycle+", '"+tup.param1+"-"+tup.param2+"', "+t.nodes.get(seed).getLevel()+")");
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
@@ -86,8 +112,10 @@ public class DBPlugin implements Plugin {
 	@Override
 	public void initialise(Simulation sim) {
 		this.sim = sim; 
-
 		dmodel = (StructuresEnvDataModel)sim.getEnvDataModel();
+		
+		this.simID = dmodel.simID;
+		this.paramSet = dmodel.paramSetID;
 		
 		// init jdbc
 		try {
@@ -97,7 +125,7 @@ public class DBPlugin implements Plugin {
 			
 			// dump sim details
 			Statement st = conn.createStatement();
-			st.execute("INSERT INTO simulations (id, scenario, paramSet) VALUES (DEFAULT, '"+this.scenario+"', "+this.paramSet+")");
+			st.execute("UPDATE simulations SET timestamp = NOW() WHERE id = "+this.simID+"");
 			ResultSet r = st.getGeneratedKeys();
 			if(r != null && r.next()) {
 				this.simID = r.getInt(1);

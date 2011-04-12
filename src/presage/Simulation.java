@@ -252,8 +252,8 @@ public class Simulation implements Runnable
 
 		eventscriptmanager.initialise();
 
-		thread=new Thread(this);
-		thread.start();
+		threadSuspended = false;
+		this.run();
 	}
 
 
@@ -283,7 +283,7 @@ public class Simulation implements Runnable
 	
 	private void doEventScript(){
 		try {
-			System.out.println("***** EventScriptManager *****");
+			//System.out.println("***** EventScriptManager *****");
 			eventscriptmanager.executeEvents(this, cycle);
 
 		} catch (Exception e){
@@ -306,7 +306,7 @@ public class Simulation implements Runnable
 	private void doPlugins(){
 		
 		try {
-			System.out.println("***** PluginManager *****");
+			//System.out.println("***** PluginManager *****");
 
 			pluginmanager.executePlugins();
 			
@@ -328,7 +328,7 @@ public class Simulation implements Runnable
 				if (threadSuspended)
 					suspendedwait();
 
-				System.out.println("Cycle = " + cycle + " -------------------------------------------");
+				//System.out.println("Cycle = " + cycle + " -------------------------------------------");
 
 				fireTimeChangeEvent();
 
@@ -350,7 +350,7 @@ public class Simulation implements Runnable
 				// as we got the model before calling execute methods
 				
 
-				Thread.sleep(presageConfig.getThreadDelay());
+				//Thread.sleep(presageConfig.getThreadDelay());
 
 				incTime();
 
@@ -426,7 +426,7 @@ public class Simulation implements Runnable
 	}
 
 	public void play(){
-		System.out.println("Resuming the sim thread");
+		//System.out.println("Resuming the sim thread");
 		threadSuspended = false;
 	}
 
@@ -492,7 +492,7 @@ public class Simulation implements Runnable
 
 		long timeleft = (presageConfig.getIterations() - cycle)*timepercycle;
 
-		System.out.println(cycle + "/" + presageConfig.getIterations() + ": t-minus " + timeleft + " (ms)");
+		//System.out.println(cycle + "/" + presageConfig.getIterations() + ": t-minus " + timeleft + " (ms)");
 
 		return timeleft;
 
@@ -657,7 +657,7 @@ public class Simulation implements Runnable
 		participantIdSet = (SortedSet<String>)players.keySet();
 
 		// Note Participant.initialise() and Participant.generateAuthcode() can only occur once!
-		System.out.println("Participants initialising");
+		//System.out.println("Participants initialising");
 
 		// System.out.println(Arrays.asList(players.keySet()));
 
@@ -725,7 +725,7 @@ public class Simulation implements Runnable
 
 		try {
 				
-				System.out.println("***** Participants *****");
+				//System.out.println("***** Participants *****");
 				
 				Participant currentParticipant;
 				String participantId;
@@ -754,7 +754,7 @@ public class Simulation implements Runnable
 
 	try {
 			
-			System.out.println("***** Participants *****");
+			//System.out.println("***** Participants *****");
 			
 			Participant currentParticipant;
 			String participantId;

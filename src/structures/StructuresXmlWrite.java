@@ -24,16 +24,19 @@ public class StructuresXmlWrite {
 		
 		int simSize = 400;
 		int communicationRange = 20;
+		final String scenario = "scenario2";
+		final int seedcount = 3;
+		final int cellcount = 200;
 
 		PresageConfig presageConfig = new PresageConfig();
 		
 		presageConfig.setComment("Simulated complex emergent structures");
-		presageConfig.setIterations(5000);
+		presageConfig.setIterations(2000);
 		presageConfig.setRandomSeed(7000);
 		presageConfig.setThreadDelay(50);
 		presageConfig.setAutorun(false);
 		
-		String path = "inputfolder/structures/";
+		String path = "inputfolder/structures/"+scenario+"/";
 		String configpath = path +"test.xml";
 		File f = new File(path);
 		f.mkdir();
@@ -46,6 +49,7 @@ public class StructuresXmlWrite {
 		PluginManager pm = new PluginManager();
 		pm.addPlugin(new StructuresViewer());
 		pm.addPlugin(new LatticePlugin());
+		pm.addPlugin(new DBPlugin(scenario, "com.mysql.jdbc.Driver", "jdbc:mysql://localhost/structures", "presage", "C5xd9feYcJbw3hy9"));
 		
 		EventScriptManager ms = new EventScriptManager();
 		
@@ -55,7 +59,6 @@ public class StructuresXmlWrite {
 		TreeMap<String, Participant> parts = new TreeMap<String, Participant>();
 		
 		// seeds
-		int seedcount = 3;
 		ArrayList<String> seedRoles = new ArrayList<String>();
 		seedRoles.add("seed");
 		TreeMap<String, SeedAgent> seeds = new TreeMap<String, SeedAgent>();
@@ -77,7 +80,6 @@ public class StructuresXmlWrite {
 		parts.putAll(seeds);
 		
 		// cells
-		int cellcount = 200;
 		ArrayList<String> cellRoles = new ArrayList<String>();
 		cellRoles.add("cell");
 		TreeMap<String, CellAgent> cells = new TreeMap<String, CellAgent>();

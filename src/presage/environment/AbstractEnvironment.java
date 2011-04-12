@@ -72,7 +72,7 @@ public abstract class AbstractEnvironment implements Environment {
 
 	public void initialise(Simulation sim){
 
-		System.out.println("Environment: -Initialising");
+		//System.out.println("Environment: -Initialising");
 		
 		random = new Random(randomseed);
 		// dataModel = new RealNetworkDataModel(this.getClass().getCanonicalName());
@@ -93,31 +93,31 @@ public abstract class AbstractEnvironment implements Environment {
 //		distributeMessages();
 
 
-		System.out.println("***** AbstractEnvironment executing Queued Actions *****");
+		//System.out.println("***** AbstractEnvironment executing Queued Actions *****");
 		executeQueuedActions();
 
 
-		System.out.println("***** AbstractEnvironment updating Physical World *****");
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
+		//System.out.println("***** AbstractEnvironment updating Physical World *****");
+		//Thread t = new Thread(new Runnable() {
+		//	@Override
+		//	public void run() {
 				updatePhysicalWorld();
-			}
-		});
-		t.start();
+		//	}
+		//});
+		//t.start();
 
-		System.out.println("***** AbstractEnvironment updating Network *****");
+		//System.out.println("***** AbstractEnvironment updating Network *****");
 		updateNetwork();
 
-		System.out.println("***** AbstractEnvironment updating Participants Perceptions *****");
+		//System.out.println("***** AbstractEnvironment updating Participants Perceptions *****");
 		updatePerceptions();
 		
-		try {
+		/*try {
 			t.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 	}
 
