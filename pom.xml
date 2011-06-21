@@ -10,6 +10,22 @@
   <name>Complex Emergent Structures</name>
   <url></url>
 
+  <dependencies>
+  	<dependency>
+  		<groupId>uk.ac.imperial.presage2</groupId>
+  		<artifactId>presage2-core</artifactId>
+  		<version>0.2-SNAPSHOT</version>
+  		<scope>compile</scope>
+  		<optional>false</optional>
+  	</dependency>
+  	<dependency>
+  		<groupId>uk.ac.imperial.presage2</groupId>
+  		<artifactId>presage2-util</artifactId>
+  		<version>0.2-SNAPSHOT</version>
+  		<scope>compile</scope>
+  		<optional>false</optional>
+  	</dependency>
+  </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
