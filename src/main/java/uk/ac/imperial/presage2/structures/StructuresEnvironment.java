@@ -8,46 +8,54 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-import uk.ac.imperial.presage2.core.environment.AbstractEnvironment;
-import uk.ac.imperial.presage2.core.environment.ActionHandler;
+import com.google.inject.Inject;
+
 import uk.ac.imperial.presage2.core.environment.EnvironmentRegistrationRequest;
 import uk.ac.imperial.presage2.core.environment.EnvironmentService;
-import uk.ac.imperial.presage2.core.environment.ParticipantSharedState;
 import uk.ac.imperial.presage2.core.environment.SharedStateAccessException;
-import uk.ac.imperial.presage2.util.environment.location.Location;
-import uk.ac.imperial.presage2.util.environment.location.ParticipantLocationService;
+import uk.ac.imperial.presage2.core.environment.UnavailableServiceException;
+import uk.ac.imperial.presage2.util.environment.AbstractEnvironment;
+import uk.ac.imperial.presage2.util.location.ParticipantLocationService;
+import uk.ac.imperial.presage2.util.location.area.Area;
+import uk.ac.imperial.presage2.util.location.area.AreaService;
+import uk.ac.imperial.presage2.util.location.area.HasArea;
 
 /**
  * @author Sam Macbeth
- *
+ * 
  */
-public class StructuresEnvironment extends AbstractEnvironment {
+public class StructuresEnvironment extends AbstractEnvironment implements HasArea {
 
 	final private Logger logger = Logger.getLogger(StructuresEnvironment.class);
-	
-	@Override
-	protected Set<ActionHandler> initialiseActionHandlers() {
-		throw new NotImplementedException();
+
+	final private Area simArea;
+
+	@Inject
+	public StructuresEnvironment(Area simArea) {
+		super();
+		this.simArea = simArea;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected Set<EnvironmentService> generateServices(EnvironmentRegistrationRequest request) {
 		final Set<EnvironmentService> services = new HashSet<EnvironmentService>();
 		try {
-			/*
-			 * TODO this should not be done by the environment programmer. The EnvironmentService programmer should allow creation of the
-			 * object through a static constructor or similar.
-			 */
-			services.add(new ParticipantLocationService(request.getParticipant(), (ParticipantSharedState<Location>) this.get("util.location", request.getParticipantID()), this, this));
-			if(logger.isDebugEnabled()) {
-				logger.debug("Added ParticipantLocationService to services for Participant "+ request.getParticipantID());
-			}
-		} catch(SharedStateAccessException e) {
-			logger.warn("Unable to add ParticipantLocationService to services for participant "+ request.getParticipantID() +", error accessing shared state.", e);
+			services.add(new ParticipantLocationService(request.getParticipant(), this, this));
+			services.add(this.getEnvironmentService(AreaService.class));
+		} catch (SharedStateAccessException e) {
+			logger.warn("Unable to add ParticipantLocationService to services for participant "
+					+ request.getParticipantID() + ", error accessing shared state.", e);
+		} catch (UnavailableServiceException e) {
+			logger.warn(
+					"Unable to add AreaService to services for participant"
+							+ request.getParticipantID(), e);
 		}
 		return services;
+	}
+
+	@Override
+	public Area getArea() {
+		return simArea;
 	}
 
 }
