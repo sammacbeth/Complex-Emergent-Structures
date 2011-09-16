@@ -10,8 +10,9 @@ import org.apache.commons.math.geometry.Vector3D;
 
 import uk.ac.imperial.presage2.core.environment.ParticipantSharedState;
 import uk.ac.imperial.presage2.core.environment.UnavailableServiceException;
+import uk.ac.imperial.presage2.structures.force.ForceService;
+import uk.ac.imperial.presage2.structures.force.HasVelocity;
 import uk.ac.imperial.presage2.util.environment.CommunicationRangeService;
-import uk.ac.imperial.presage2.util.location.HasLocation;
 import uk.ac.imperial.presage2.util.location.Location;
 import uk.ac.imperial.presage2.util.location.ParticipantLocationService;
 import uk.ac.imperial.presage2.util.location.area.AreaService;
@@ -24,7 +25,7 @@ import uk.ac.imperial.presage2.util.participant.HasPerceptionRange;
  * @author Sam Macbeth
  * 
  */
-public abstract class StructuresAgent extends AbstractParticipant implements HasLocation,
+public abstract class StructuresAgent extends AbstractParticipant implements HasVelocity,
 		HasPerceptionRange, HasCommunicationRange {
 
 	// -- agent state
@@ -37,7 +38,11 @@ public abstract class StructuresAgent extends AbstractParticipant implements Has
 
 	double energy;
 
+	final double dragCoefficient = 0.2;
+
 	final double ENERGY_MAX;
+
+	final double THRUST_MAX = 5;
 	// --
 
 	protected ParticipantLocationService locationService;
@@ -87,12 +92,19 @@ public abstract class StructuresAgent extends AbstractParticipant implements Has
 		this.location = l;
 	}
 
+	@Override
 	public Vector3D getVelocity() {
 		return velocity;
 	}
 
+	@Override
 	public void setVelocity(Vector3D velocity) {
 		this.velocity = velocity;
+	}
+
+	@Override
+	public double getDragCoefficient() {
+		return this.dragCoefficient;
 	}
 
 	@Override
@@ -102,6 +114,8 @@ public abstract class StructuresAgent extends AbstractParticipant implements Has
 		ss.add(ParticipantLocationService.createSharedState(this.getID(), this));
 		// shared state for network communication range
 		ss.add(CommunicationRangeService.createSharedState(getID(), this));
+		// shared state for velocity etc
+		ss.add(ForceService.createSharedState(getID(), this));
 
 		return ss;
 	}

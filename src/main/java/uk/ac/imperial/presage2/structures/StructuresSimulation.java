@@ -6,16 +6,19 @@ import java.util.Set;
 import com.google.inject.AbstractModule;
 
 import uk.ac.imperial.presage2.core.Time;
+import uk.ac.imperial.presage2.core.participant.Participant;
 import uk.ac.imperial.presage2.core.simulator.InjectedSimulation;
 import uk.ac.imperial.presage2.core.simulator.Parameter;
 import uk.ac.imperial.presage2.core.simulator.Scenario;
+import uk.ac.imperial.presage2.core.util.random.Random;
+import uk.ac.imperial.presage2.util.location.Location;
 import uk.ac.imperial.presage2.util.location.area.Area;
 
 /**
  * @author Sam Macbeth
  * 
  */
-class StructuresSimulation extends InjectedSimulation {
+public class StructuresSimulation extends InjectedSimulation {
 
 	@Parameter(name = "finishTime")
 	public int finishTime;
@@ -35,7 +38,7 @@ class StructuresSimulation extends InjectedSimulation {
 	@Parameter(name = "seedCount")
 	public int seedCount;
 
-	StructuresSimulation(Set<AbstractModule> modules) {
+	public StructuresSimulation(Set<AbstractModule> modules) {
 		super(modules);
 	}
 
@@ -50,8 +53,10 @@ class StructuresSimulation extends InjectedSimulation {
 
 	@Override
 	protected void addToScenario(Scenario s) {
-		// TODO Auto-generated method stub
-
+		Participant p = new CellAgent(Random.randomUUID(), "cellagent", new Location(0, 0, 0), 10,
+				10, 10, 10);
+		getInjector().injectMembers(p);
+		s.addParticipant(p);
 	}
 
 }
