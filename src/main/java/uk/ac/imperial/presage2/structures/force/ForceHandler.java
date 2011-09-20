@@ -55,6 +55,8 @@ public class ForceHandler extends MoveHandler {
 				drag = drag.add(new Vector3D(currentVelocity.getNormSq()
 						* forceService.getAgentDragCoefficient(actor) * -1, currentVelocity
 						.normalize()));
+				if(drag.getNorm() > currentVelocity.getNorm()) 
+					drag = new Vector3D(currentVelocity.getNorm(), drag.normalize());
 			}
 
 			// calculate new velocity - intermediate stage

@@ -49,8 +49,12 @@ public class CellAgent extends StructuresAgent {
 		}
 
 		Force f = new Force(0, 0, 0);
-		if (this.location.distanceTo(target) > 10) {
+		if (this.location.distanceTo(target) > 1) {
 			f = Force.getForceTo(location, velocity, target, THRUST_MAX);
+		} else {
+			target = new Location(Random.randomInt(areaService.getSizeX()),
+					Random.randomInt(areaService.getSizeY()), Random.randomInt(areaService
+							.getSizeZ()));
 		}
 
 		this.logger.info("Applying thrust: " + f);
